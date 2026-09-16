@@ -53,9 +53,10 @@ Requires **Godot 4.5+**.
 ## Status
 
 This SDK is being built in public, in order, against a public backlog. The circuit
-data model is defined as a versioned, serializable graph — see
-[`docs/circuit-graph-schema.md`](docs/circuit-graph-schema.md) — and is what the rules
-engine (in progress) will run on.
+data model is a versioned, serializable graph — see
+[`docs/circuit-graph-schema.md`](docs/circuit-graph-schema.md) — and a simplified rules
+engine computes voltage/current per node on top of it — see
+[`docs/rules-engine.md`](docs/rules-engine.md).
 
 ## Contributing
 
