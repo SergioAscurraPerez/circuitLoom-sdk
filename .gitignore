@@ -1,0 +1,20 @@
+# Godot 4+ specific ignores
+.godot/
+.import/
+export.cfg
+export_presets.cfg
+*.translation
+
+# Imported translations (automatically generated from CSV files)
+*.translation
+
+# Mono-specific ignores
+.mono/
+data_*/
+
+# System/tooling
+.DS_Store
+Thumbs.db
+
+# Internal planning docs (not for public repo)
+*.xlsx
