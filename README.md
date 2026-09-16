@@ -48,7 +48,7 @@ schematic.
 > folder as `addons/circuitloom_sdk/`, then enable **CircuitLoom SDK** under
 > **Project > Project Settings > Plugins**.
 
-Requires **Godot 4.3+**.
+Requires **Godot 4.5+**.
 
 ## Status
 

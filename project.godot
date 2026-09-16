@@ -12,7 +12,7 @@ config_version=5
 
 config/name="CircuitLoom SDK"
 config/description="Open-source Godot addon: a graph-based circuit simulation SDK for electronics education (Arduino UNO-compatible components)."
-config/features=PackedStringArray("4.3")
+config/features=PackedStringArray("4.5")
 
 [editor_plugins]
 

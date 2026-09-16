@@ -7,7 +7,7 @@ new components, or core engine work.
 ## Getting started
 
 1. Fork the repo and clone your fork.
-2. Open the project in **Godot 4.3+**.
+2. Open the project in **Godot 4.5+**.
 3. Create a branch off `main` for your change.
 4. Make your change, and add/update tests under `tests/` (we use [gdUnit4](https://github.com/godot-gdunit-labs/gdunit4)).
 5. Run the lint and test suite locally before opening a PR (see below).

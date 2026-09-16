@@ -37,7 +37,7 @@ jobs:
           lfs: true
       - uses: MikeSchulze/gdUnit4-action@v1.0.2
         with:
-          godot-version: "4.3"
+          godot-version: "4.5"
           paths: |
             res://tests/
           timeout: 5
