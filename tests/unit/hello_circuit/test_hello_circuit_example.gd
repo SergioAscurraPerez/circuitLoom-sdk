@@ -26,7 +26,7 @@ func test_reference_example_fires_on_short_circuit() -> void:
 
 	monitor.check(HelloCircuit.load_circuit("short_circuit"))
 
-	await assert_signal(monitor).is_emitted(monitor.on_short_circuit)
+	await assert_signal(monitor).is_emitted(monitor.on_short_circuit, any())
 
 
 func test_reference_example_fires_on_component_damaged() -> void:
@@ -34,7 +34,7 @@ func test_reference_example_fires_on_component_damaged() -> void:
 
 	monitor.check(HelloCircuit.load_circuit("overcurrent"))
 
-	await assert_signal(monitor).is_emitted(monitor.on_component_damaged)
+	await assert_signal(monitor).is_emitted(monitor.on_component_damaged, any())
 
 
 func test_run_executes_without_error() -> void:

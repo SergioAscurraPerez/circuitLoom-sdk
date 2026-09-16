@@ -18,8 +18,8 @@ func test_valid_circuit_emits_on_circuit_valid_only() -> void:
 	monitor.check(circuit)
 
 	await assert_signal(monitor).is_emitted(monitor.on_circuit_valid)
-	await assert_signal(monitor).wait_until(50).is_not_emitted(monitor.on_short_circuit)
-	await assert_signal(monitor).wait_until(50).is_not_emitted(monitor.on_component_damaged)
+	await assert_signal(monitor).wait_until(50).is_not_emitted(monitor.on_short_circuit, any())
+	await assert_signal(monitor).wait_until(50).is_not_emitted(monitor.on_component_damaged, any())
 
 
 func test_short_circuit_emits_on_short_circuit_only() -> void:
@@ -29,9 +29,9 @@ func test_short_circuit_emits_on_short_circuit_only() -> void:
 
 	monitor.check(circuit)
 
-	await assert_signal(monitor).is_emitted(monitor.on_short_circuit)
+	await assert_signal(monitor).is_emitted(monitor.on_short_circuit, any())
 	await assert_signal(monitor).wait_until(50).is_not_emitted(monitor.on_circuit_valid)
-	await assert_signal(monitor).wait_until(50).is_not_emitted(monitor.on_component_damaged)
+	await assert_signal(monitor).wait_until(50).is_not_emitted(monitor.on_component_damaged, any())
 
 
 func test_overcurrent_emits_on_component_damaged_only() -> void:
@@ -46,9 +46,9 @@ func test_overcurrent_emits_on_component_damaged_only() -> void:
 
 	monitor.check(circuit)
 
-	await assert_signal(monitor).is_emitted(monitor.on_component_damaged)
+	await assert_signal(monitor).is_emitted(monitor.on_component_damaged, any())
 	await assert_signal(monitor).wait_until(50).is_not_emitted(monitor.on_circuit_valid)
-	await assert_signal(monitor).wait_until(50).is_not_emitted(monitor.on_short_circuit)
+	await assert_signal(monitor).wait_until(50).is_not_emitted(monitor.on_short_circuit, any())
 
 
 func test_on_short_circuit_payload_matches_the_rules_engine_result() -> void:
