@@ -1,0 +1,33 @@
+{
+  "schema_version": "v1",
+  "circuit": {
+    "id": "hello-circuit-overcurrent",
+    "name": "LED wired directly to 5V with no series resistor",
+    "nodes": [
+      {
+        "id": "arduino_1",
+        "type": "arduino_uno",
+        "label": "Arduino UNO",
+        "pins": [
+          { "id": "5V", "role": "power" },
+          { "id": "GND", "role": "ground" }
+        ],
+        "specs": { "operating_voltage_v": 5, "digital_pins": 14, "analog_pins": 6 }
+      },
+      {
+        "id": "led_1",
+        "type": "led",
+        "label": "Red LED",
+        "pins": [
+          { "id": "anode", "role": "passive" },
+          { "id": "cathode", "role": "passive" }
+        ],
+        "specs": { "color": "red", "forward_voltage_v": 2.0, "max_current_ma": 20 }
+      }
+    ],
+    "edges": [
+      { "id": "w1", "from": { "node_id": "arduino_1", "pin_id": "5V" }, "to": { "node_id": "led_1", "pin_id": "anode" } },
+      { "id": "w2", "from": { "node_id": "led_1", "pin_id": "cathode" }, "to": { "node_id": "arduino_1", "pin_id": "GND" } }
+    ]
+  }
+}

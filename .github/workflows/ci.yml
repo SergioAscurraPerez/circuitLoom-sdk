@@ -20,7 +20,7 @@ jobs:
         with:
           python-version: "3.11"
       - run: pip install "gdtoolkit==4.*"
-      - run: gdlint addons/ tests/
+      - run: gdlint addons/ tests/ examples/
 
   schema:
     name: Validate schema examples

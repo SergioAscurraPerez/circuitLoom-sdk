@@ -54,9 +54,11 @@ Requires **Godot 4.5+**.
 
 This SDK is being built in public, in order, against a public backlog. The circuit
 data model is a versioned, serializable graph — see
-[`docs/circuit-graph-schema.md`](docs/circuit-graph-schema.md) — and a simplified rules
+[`docs/circuit-graph-schema.md`](docs/circuit-graph-schema.md) — a simplified rules
 engine computes voltage/current per node on top of it — see
-[`docs/rules-engine.md`](docs/rules-engine.md).
+[`docs/rules-engine.md`](docs/rules-engine.md) — and `CircuitMonitor` exposes that as
+three events (`on_short_circuit`, `on_component_damaged`, `on_circuit_valid`) consumers
+can connect to from outside the core — see [`docs/events.md`](docs/events.md).
 
 ## Contributing
 

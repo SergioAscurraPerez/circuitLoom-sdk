@@ -1,0 +1,22 @@
+{
+  "schema_version": "v1",
+  "circuit": {
+    "id": "hello-circuit-short",
+    "name": "Bare wire straight from 5V to GND",
+    "nodes": [
+      {
+        "id": "arduino_1",
+        "type": "arduino_uno",
+        "label": "Arduino UNO",
+        "pins": [
+          { "id": "5V", "role": "power" },
+          { "id": "GND", "role": "ground" }
+        ],
+        "specs": { "operating_voltage_v": 5, "digital_pins": 14, "analog_pins": 6 }
+      }
+    ],
+    "edges": [
+      { "id": "w1", "from": { "node_id": "arduino_1", "pin_id": "5V" }, "to": { "node_id": "arduino_1", "pin_id": "GND" }, "wire_color": "red" }
+    ]
+  }
+}
