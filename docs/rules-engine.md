@@ -22,11 +22,13 @@ var result := RulesEngine.new().evaluate(circuit_doc)
 2. **Sources.** Only an `arduino_uno` node's `power`/`ground`-role pins are treated as an
    ideal voltage source / 0V reference.
 3. **Loads.** Every other two-terminal-ish component (`resistor`, `led`, `buzzer`,
-   `potentiometer`, and — via their `power`/`ground`-role pins only —
+   `potentiometer`, `photoresistor`, and — via their `power`/`ground`-role pins only —
    `servo_motor`/`ultrasonic_sensor`) becomes an edge in a net-level graph, with an
    effective resistance:
    - `resistor`/`potentiometer`: `specs.resistance_ohm` directly (a potentiometer's
      `wiper` pin is ignored in v1 — it's treated as a fixed resistor across its two ends).
+   - `photoresistor`: `specs.dark_resistance_ohm` — v1 has no light model, so it's always
+     evaluated at its highest (dark-state) resistance, the most conservative reading.
    - `led`/`buzzer`/`servo_motor`/`ultrasonic_sensor`: derived as
      `rated_voltage / rated_current`, from whichever voltage/current spec pair the
      component has (e.g. an LED's `forward_voltage_v` / `max_current_ma`).
@@ -49,6 +51,8 @@ var result := RulesEngine.new().evaluate(circuit_doc)
   pin's runtime HIGH/LOW state, which isn't part of the static graph. It's still checked
   for direct shorts.
 - **No diode polarity check.** An LED wired backwards isn't flagged.
+- **No light model.** A `photoresistor` is a fixed resistor in v1, always at its
+  dark-state resistance — it doesn't actually respond to a simulated light level.
 - **Single ideal voltage source.** No internal source resistance, no total-current limit
   on the source itself.
 - **Coverage tooling.** There's no mature, CI-ready GDScript line-coverage tool yet (the

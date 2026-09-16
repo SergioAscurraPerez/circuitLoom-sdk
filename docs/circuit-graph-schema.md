@@ -34,8 +34,10 @@ schema version they declare.
 }
 ```
 
-Each `node.type` is one of the 9 v1 component types, and `specs` is validated against a
-type-specific schema (`$defs.specs.<type>`) via an `if/then` on `type`:
+Each `node.type` is one of the 10 v1 component types, and `specs` is validated against a
+type-specific schema (`$defs.specs.<type>`) via an `if/then` on `type`. These are the
+same 10 components in a typical Arduino UNO starter kit — see
+[`components.md`](components.md) for their real datasheet specs:
 
 | type | specs fields |
 |---|---|
@@ -48,6 +50,7 @@ type-specific schema (`$defs.specs.<type>`) via an `if/then` on `type`:
 | `potentiometer` | `resistance_ohm`, `taper` (`linear`/`logarithmic`) |
 | `ultrasonic_sensor` | `operating_voltage_v`, `max_current_ma`, `range_cm_min`, `range_cm_max` |
 | `breadboard` | `rows`, `columns`, `has_power_rails` |
+| `photoresistor` | `dark_resistance_ohm`, `bright_resistance_ohm` |
 
 Pins carry a `role` (`power`, `ground`, `digital_io`, `analog_io`, `pwm`, `passive`,
 `trigger`, `echo`, `wiper`, `tie_point`) so the rules engine can reason about a pin

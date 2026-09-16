@@ -32,6 +32,8 @@ jobs:
           python-version: "3.11"
       - run: pip install jsonschema
       - run: python scripts/validate_schema_examples.py
+      - run: python scripts/validate_components_catalog.py
+      - run: python scripts/validate_wire_colors.py
 
   test:
     name: Tests (gdUnit4)

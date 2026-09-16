@@ -42,7 +42,8 @@
         "servo_motor",
         "potentiometer",
         "ultrasonic_sensor",
-        "breadboard"
+        "breadboard",
+        "photoresistor"
       ]
     },
 
@@ -123,6 +124,10 @@
         {
           "if": { "properties": { "type": { "const": "breadboard" } } },
           "then": { "properties": { "specs": { "$ref": "#/$defs/specs/breadboard" } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "photoresistor" } } },
+          "then": { "properties": { "specs": { "$ref": "#/$defs/specs/photoresistor" } } }
         }
       ]
     },
@@ -241,6 +246,15 @@
           "rows": { "type": "integer", "exclusiveMinimum": 0 },
           "columns": { "type": "integer", "exclusiveMinimum": 0 },
           "has_power_rails": { "type": "boolean" }
+        }
+      },
+      "photoresistor": {
+        "type": "object",
+        "required": ["dark_resistance_ohm", "bright_resistance_ohm"],
+        "additionalProperties": false,
+        "properties": {
+          "dark_resistance_ohm": { "type": "number", "exclusiveMinimum": 0 },
+          "bright_resistance_ohm": { "type": "number", "exclusiveMinimum": 0 }
         }
       }
     }
