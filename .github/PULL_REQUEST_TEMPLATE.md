@@ -11,10 +11,6 @@
 - [ ] `test` — adding or fixing tests
 - [ ] `chore` — tooling, CI, dependencies
 
-## How was this tested?
-
-<!-- Steps to reproduce/verify, or which automated tests cover this. -->
-
 ## Checklist
 
 - [ ] CI passes (lint + tests)
