@@ -1,0 +1,19 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes before the section's content
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="CircuitLoom SDK"
+config/description="Open-source Godot addon: a graph-based circuit simulation SDK for electronics education (Arduino UNO-compatible components)."
+config/features=PackedStringArray("4.5")
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/circuitloom_sdk/plugin.cfg")
