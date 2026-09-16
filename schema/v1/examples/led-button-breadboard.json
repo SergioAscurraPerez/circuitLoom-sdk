@@ -1,0 +1,91 @@
+{
+  "schema_version": "v1",
+  "circuit": {
+    "id": "example-led-button-breadboard",
+    "name": "PWM LED with button input, on a breadboard",
+    "nodes": [
+      {
+        "id": "arduino_1",
+        "type": "arduino_uno",
+        "label": "Arduino UNO",
+        "pins": [
+          { "id": "5V", "name": "5V", "role": "power" },
+          { "id": "GND", "name": "GND", "role": "ground" },
+          { "id": "D9", "name": "Digital 9 (PWM)", "role": "pwm" },
+          { "id": "D2", "name": "Digital 2", "role": "digital_io" }
+        ],
+        "specs": {
+          "operating_voltage_v": 5,
+          "digital_pins": 14,
+          "analog_pins": 6,
+          "pwm_pins": 6
+        }
+      },
+      {
+        "id": "breadboard_1",
+        "type": "breadboard",
+        "label": "Half+ breadboard",
+        "pins": [
+          { "id": "PWR_RAIL_POS", "name": "Positive rail", "role": "power" },
+          { "id": "PWR_RAIL_NEG", "name": "Negative rail", "role": "ground" }
+        ],
+        "specs": {
+          "rows": 30,
+          "columns": 10,
+          "has_power_rails": true
+        }
+      },
+      {
+        "id": "resistor_1",
+        "type": "resistor",
+        "label": "220 ohm resistor",
+        "pins": [
+          { "id": "terminal_a", "role": "passive" },
+          { "id": "terminal_b", "role": "passive" }
+        ],
+        "specs": {
+          "resistance_ohm": 220,
+          "tolerance_percent": 5,
+          "max_power_w": 0.25
+        }
+      },
+      {
+        "id": "led_1",
+        "type": "led",
+        "label": "Red LED",
+        "pins": [
+          { "id": "anode", "role": "passive" },
+          { "id": "cathode", "role": "passive" }
+        ],
+        "specs": {
+          "color": "red",
+          "forward_voltage_v": 2.0,
+          "max_current_ma": 20
+        }
+      },
+      {
+        "id": "button_1",
+        "type": "push_button",
+        "label": "Momentary push button",
+        "pins": [
+          { "id": "leg_a", "role": "passive" },
+          { "id": "leg_b", "role": "passive" }
+        ],
+        "specs": {
+          "max_voltage_v": 5,
+          "max_current_ma": 50,
+          "normally_open": true
+        }
+      }
+    ],
+    "edges": [
+      { "id": "w1", "from": { "node_id": "arduino_1", "pin_id": "5V" }, "to": { "node_id": "breadboard_1", "pin_id": "PWR_RAIL_POS" }, "wire_color": "red" },
+      { "id": "w2", "from": { "node_id": "arduino_1", "pin_id": "GND" }, "to": { "node_id": "breadboard_1", "pin_id": "PWR_RAIL_NEG" }, "wire_color": "black" },
+      { "id": "w3", "from": { "node_id": "arduino_1", "pin_id": "D9" }, "to": { "node_id": "resistor_1", "pin_id": "terminal_a" }, "wire_color": "yellow" },
+      { "id": "w4", "from": { "node_id": "resistor_1", "pin_id": "terminal_b" }, "to": { "node_id": "led_1", "pin_id": "anode" }, "wire_color": "yellow" },
+      { "id": "w5", "from": { "node_id": "led_1", "pin_id": "cathode" }, "to": { "node_id": "breadboard_1", "pin_id": "PWR_RAIL_NEG" }, "wire_color": "black" },
+      { "id": "w6", "from": { "node_id": "button_1", "pin_id": "leg_a" }, "to": { "node_id": "arduino_1", "pin_id": "D2" }, "wire_color": "orange" },
+      { "id": "w7", "from": { "node_id": "button_1", "pin_id": "leg_b" }, "to": { "node_id": "breadboard_1", "pin_id": "PWR_RAIL_NEG" }, "wire_color": "black" }
+    ]
+  }
+}

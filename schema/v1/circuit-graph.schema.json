@@ -1,0 +1,248 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/SergioAscurraPerez/circuitLoom-sdk/main/schema/v1/circuit-graph.schema.json",
+  "title": "CircuitLoom Circuit Graph",
+  "description": "Serializable graph representation of a circuit: components/pins as nodes, wires as edges. Consumed by the rules engine (SDK-04) and by any game/tool built on the SDK.",
+  "type": "object",
+  "required": ["schema_version", "circuit"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "v1"
+    },
+    "circuit": { "$ref": "#/$defs/circuit" }
+  },
+  "$defs": {
+    "circuit": {
+      "type": "object",
+      "required": ["id", "nodes", "edges"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string" },
+        "nodes": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/node" }
+        },
+        "edges": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/edge" }
+        }
+      }
+    },
+
+    "componentType": {
+      "enum": [
+        "arduino_uno",
+        "led",
+        "resistor",
+        "push_button",
+        "buzzer",
+        "servo_motor",
+        "potentiometer",
+        "ultrasonic_sensor",
+        "breadboard"
+      ]
+    },
+
+    "pinRole": {
+      "enum": [
+        "power",
+        "ground",
+        "digital_io",
+        "analog_io",
+        "pwm",
+        "passive",
+        "trigger",
+        "echo",
+        "wiper",
+        "tie_point"
+      ]
+    },
+
+    "pin": {
+      "type": "object",
+      "required": ["id", "role"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "name": { "type": "string" },
+        "role": { "$ref": "#/$defs/pinRole" }
+      }
+    },
+
+    "node": {
+      "type": "object",
+      "required": ["id", "type", "pins", "specs"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "type": { "$ref": "#/$defs/componentType" },
+        "label": { "type": "string" },
+        "pins": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/pin" }
+        },
+        "specs": { "type": "object" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "const": "arduino_uno" } } },
+          "then": { "properties": { "specs": { "$ref": "#/$defs/specs/arduino_uno" } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "led" } } },
+          "then": { "properties": { "specs": { "$ref": "#/$defs/specs/led" } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "resistor" } } },
+          "then": { "properties": { "specs": { "$ref": "#/$defs/specs/resistor" } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "push_button" } } },
+          "then": { "properties": { "specs": { "$ref": "#/$defs/specs/push_button" } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "buzzer" } } },
+          "then": { "properties": { "specs": { "$ref": "#/$defs/specs/buzzer" } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "servo_motor" } } },
+          "then": { "properties": { "specs": { "$ref": "#/$defs/specs/servo_motor" } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "potentiometer" } } },
+          "then": { "properties": { "specs": { "$ref": "#/$defs/specs/potentiometer" } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "ultrasonic_sensor" } } },
+          "then": { "properties": { "specs": { "$ref": "#/$defs/specs/ultrasonic_sensor" } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "breadboard" } } },
+          "then": { "properties": { "specs": { "$ref": "#/$defs/specs/breadboard" } } }
+        }
+      ]
+    },
+
+    "pinRef": {
+      "type": "object",
+      "required": ["node_id", "pin_id"],
+      "additionalProperties": false,
+      "properties": {
+        "node_id": { "type": "string", "minLength": 1 },
+        "pin_id": { "type": "string", "minLength": 1 }
+      }
+    },
+
+    "edge": {
+      "type": "object",
+      "required": ["id", "from", "to"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "from": { "$ref": "#/$defs/pinRef" },
+        "to": { "$ref": "#/$defs/pinRef" },
+        "wire_color": {
+          "enum": ["red", "black", "yellow", "green", "blue", "orange", "white", "brown", "gray", "purple"]
+        }
+      }
+    },
+
+    "specs": {
+      "arduino_uno": {
+        "type": "object",
+        "required": ["operating_voltage_v", "digital_pins", "analog_pins"],
+        "additionalProperties": false,
+        "properties": {
+          "operating_voltage_v": { "type": "number", "exclusiveMinimum": 0 },
+          "digital_pins": { "type": "integer", "minimum": 0 },
+          "analog_pins": { "type": "integer", "minimum": 0 },
+          "pwm_pins": { "type": "integer", "minimum": 0 }
+        }
+      },
+      "led": {
+        "type": "object",
+        "required": ["forward_voltage_v", "max_current_ma"],
+        "additionalProperties": false,
+        "properties": {
+          "color": { "type": "string" },
+          "forward_voltage_v": { "type": "number", "exclusiveMinimum": 0 },
+          "max_current_ma": { "type": "number", "exclusiveMinimum": 0 }
+        }
+      },
+      "resistor": {
+        "type": "object",
+        "required": ["resistance_ohm"],
+        "additionalProperties": false,
+        "properties": {
+          "resistance_ohm": { "type": "number", "exclusiveMinimum": 0 },
+          "tolerance_percent": { "type": "number", "minimum": 0 },
+          "max_power_w": { "type": "number", "exclusiveMinimum": 0 }
+        }
+      },
+      "push_button": {
+        "type": "object",
+        "required": ["max_voltage_v", "max_current_ma"],
+        "additionalProperties": false,
+        "properties": {
+          "max_voltage_v": { "type": "number", "exclusiveMinimum": 0 },
+          "max_current_ma": { "type": "number", "exclusiveMinimum": 0 },
+          "normally_open": { "type": "boolean" }
+        }
+      },
+      "buzzer": {
+        "type": "object",
+        "required": ["rated_voltage_v", "max_current_ma", "kind"],
+        "additionalProperties": false,
+        "properties": {
+          "kind": { "enum": ["active", "passive"] },
+          "rated_voltage_v": { "type": "number", "exclusiveMinimum": 0 },
+          "max_current_ma": { "type": "number", "exclusiveMinimum": 0 }
+        }
+      },
+      "servo_motor": {
+        "type": "object",
+        "required": ["operating_voltage_v", "stall_current_ma", "rotation_range_deg"],
+        "additionalProperties": false,
+        "properties": {
+          "operating_voltage_v": { "type": "number", "exclusiveMinimum": 0 },
+          "stall_current_ma": { "type": "number", "exclusiveMinimum": 0 },
+          "rotation_range_deg": { "type": "number", "exclusiveMinimum": 0 }
+        }
+      },
+      "potentiometer": {
+        "type": "object",
+        "required": ["resistance_ohm", "taper"],
+        "additionalProperties": false,
+        "properties": {
+          "resistance_ohm": { "type": "number", "exclusiveMinimum": 0 },
+          "taper": { "enum": ["linear", "logarithmic"] }
+        }
+      },
+      "ultrasonic_sensor": {
+        "type": "object",
+        "required": ["operating_voltage_v", "max_current_ma", "range_cm_min", "range_cm_max"],
+        "additionalProperties": false,
+        "properties": {
+          "operating_voltage_v": { "type": "number", "exclusiveMinimum": 0 },
+          "max_current_ma": { "type": "number", "exclusiveMinimum": 0 },
+          "range_cm_min": { "type": "number", "minimum": 0 },
+          "range_cm_max": { "type": "number", "exclusiveMinimum": 0 }
+        }
+      },
+      "breadboard": {
+        "type": "object",
+        "required": ["rows", "columns", "has_power_rails"],
+        "additionalProperties": false,
+        "properties": {
+          "rows": { "type": "integer", "exclusiveMinimum": 0 },
+          "columns": { "type": "integer", "exclusiveMinimum": 0 },
+          "has_power_rails": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}
