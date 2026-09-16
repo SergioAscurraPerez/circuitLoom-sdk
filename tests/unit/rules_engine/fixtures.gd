@@ -27,7 +27,7 @@ static func breadboard(id: String = "breadboard_1") -> Dictionary:
 			{"id": "PWR_RAIL_POS", "role": "power"},
 			{"id": "PWR_RAIL_NEG", "role": "ground"},
 		],
-		"specs": {"rows": 30, "columns": 10, "has_power_rails": true},
+		"specs": {"rows": 10, "columns": 63, "has_power_rails": true},
 	}
 
 
@@ -140,6 +140,21 @@ static func potentiometer(
 			{"id": "b", "role": "passive"},
 		],
 		"specs": {"resistance_ohm": resistance_ohm, "taper": taper},
+	}
+
+
+static func photoresistor(
+	id: String, dark_resistance_ohm: float = 1000000.0, bright_resistance_ohm: float = 15000.0
+) -> Dictionary:
+	return {
+		"id": id,
+		"type": "photoresistor",
+		"pins": [{"id": "a", "role": "passive"}, {"id": "b", "role": "passive"}],
+		"specs":
+		{
+			"dark_resistance_ohm": dark_resistance_ohm,
+			"bright_resistance_ohm": bright_resistance_ohm
+		},
 	}
 
 

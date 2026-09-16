@@ -61,6 +61,21 @@ func test_potentiometer_is_treated_as_a_fixed_resistor_ignoring_its_wiper() -> v
 	assert_float(result["node_currents_ma"]["pot_1"]).is_equal_approx(5.0, 0.001)
 
 
+func test_photoresistor_is_evaluated_at_its_dark_state_resistance() -> void:
+	var arduino := F.arduino()
+	var ldr := F.photoresistor("ldr_1", 1000000.0)
+	var edges := [
+		F.edge("w1", "arduino_1", "5V", "ldr_1", "a"),
+		F.edge("w2", "ldr_1", "b", "arduino_1", "GND"),
+	]
+	var circuit := F.doc([arduino, ldr], edges)
+
+	var result := RulesEngine.new().evaluate(circuit)
+
+	assert_bool(result["is_valid"]).is_true()
+	assert_float(result["node_currents_ma"]["ldr_1"]).is_equal_approx(0.005, 0.0001)
+
+
 func test_open_button_leaves_its_branch_without_current() -> void:
 	var arduino := F.arduino()
 	var button := F.push_button("button_1", true)

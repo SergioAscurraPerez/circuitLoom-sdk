@@ -9,6 +9,16 @@ const MAX_PATH_HOPS := 12
 const MAX_PATHS_PER_SOURCE := 500
 const EPSILON := 1e-6
 
+## type -> [voltage spec key, current spec key], for load types whose effective
+## resistance is derived (rated voltage / rated current) rather than given
+## directly as a resistance spec.
+const RATED_VOLTAGE_CURRENT_SPEC_KEYS := {
+	"led": ["forward_voltage_v", "max_current_ma"],
+	"buzzer": ["rated_voltage_v", "max_current_ma"],
+	"servo_motor": ["operating_voltage_v", "stall_current_ma"],
+	"ultrasonic_sensor": ["operating_voltage_v", "max_current_ma"],
+}
+
 
 class _UnionFind:
 	var _parent: Dictionary = {}
@@ -230,7 +240,7 @@ func _dfs_paths(
 func _branch_pins(node: Dictionary) -> Array:
 	var pins: Array = node["pins"]
 	match node["type"]:
-		"resistor", "led", "buzzer", "potentiometer", "push_button":
+		"resistor", "led", "buzzer", "potentiometer", "push_button", "photoresistor":
 			var usable: Array = []
 			for pin in pins:
 				if pin["role"] != "wiper":
@@ -255,27 +265,21 @@ func _find_pin_id_by_role(pins: Array, role: String) -> String:
 
 func _effective_resistance_ohm(node: Dictionary) -> float:
 	var specs: Dictionary = node["specs"]
-	match node["type"]:
-		"resistor", "potentiometer":
-			return float(specs.get("resistance_ohm", 0.0))
-		"led":
-			return _voltage_over_current(
-				specs.get("forward_voltage_v", 0.0), specs.get("max_current_ma", 0.0)
-			)
-		"buzzer":
-			return _voltage_over_current(
-				specs.get("rated_voltage_v", 0.0), specs.get("max_current_ma", 0.0)
-			)
-		"servo_motor":
-			return _voltage_over_current(
-				specs.get("operating_voltage_v", 0.0), specs.get("stall_current_ma", 0.0)
-			)
-		"ultrasonic_sensor":
-			return _voltage_over_current(
-				specs.get("operating_voltage_v", 0.0), specs.get("max_current_ma", 0.0)
-			)
-		_:
-			return 0.0
+	var type: String = node["type"]
+
+	if type == "resistor" or type == "potentiometer":
+		return float(specs.get("resistance_ohm", 0.0))
+
+	if type == "photoresistor":
+		# v1 has no light model — evaluate at the datasheet's dark-state
+		# resistance (its highest, most conservative reading).
+		return float(specs.get("dark_resistance_ohm", 0.0))
+
+	if RATED_VOLTAGE_CURRENT_SPEC_KEYS.has(type):
+		var spec_keys: Array = RATED_VOLTAGE_CURRENT_SPEC_KEYS[type]
+		return _voltage_over_current(specs.get(spec_keys[0], 0.0), specs.get(spec_keys[1], 0.0))
+
+	return 0.0
 
 
 func _voltage_over_current(voltage: Variant, current_ma: Variant) -> float:

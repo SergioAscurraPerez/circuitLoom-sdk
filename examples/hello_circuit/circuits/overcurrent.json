@@ -26,8 +26,8 @@
       }
     ],
     "edges": [
-      { "id": "w1", "from": { "node_id": "arduino_1", "pin_id": "5V" }, "to": { "node_id": "led_1", "pin_id": "anode" } },
-      { "id": "w2", "from": { "node_id": "led_1", "pin_id": "cathode" }, "to": { "node_id": "arduino_1", "pin_id": "GND" } }
+      { "id": "w1", "from": { "node_id": "arduino_1", "pin_id": "5V" }, "to": { "node_id": "led_1", "pin_id": "anode" }, "wire_color": "red" },
+      { "id": "w2", "from": { "node_id": "led_1", "pin_id": "cathode" }, "to": { "node_id": "arduino_1", "pin_id": "GND" }, "wire_color": "black" }
     ]
   }
 }

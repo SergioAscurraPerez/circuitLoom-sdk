@@ -30,8 +30,8 @@
           { "id": "PWR_RAIL_NEG", "name": "Negative rail", "role": "ground" }
         ],
         "specs": {
-          "rows": 30,
-          "columns": 10,
+          "rows": 10,
+          "columns": 63,
           "has_power_rails": true
         }
       },
