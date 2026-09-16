@@ -52,9 +52,10 @@ Requires **Godot 4.5+**.
 
 ## Status
 
-This SDK is being built in public, in order, against a public backlog. Current focus:
-open-source foundations and CI (this repo, its license, and its build pipeline) before
-the circuit graph schema and rules engine land.
+This SDK is being built in public, in order, against a public backlog. The circuit
+data model is defined as a versioned, serializable graph — see
+[`docs/circuit-graph-schema.md`](docs/circuit-graph-schema.md) — and is what the rules
+engine (in progress) will run on.
 
 ## Contributing
 
