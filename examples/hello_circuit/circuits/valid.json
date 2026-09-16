@@ -1,0 +1,44 @@
+{
+  "schema_version": "v1",
+  "circuit": {
+    "id": "hello-circuit-valid",
+    "name": "LED with a correctly sized resistor",
+    "nodes": [
+      {
+        "id": "arduino_1",
+        "type": "arduino_uno",
+        "label": "Arduino UNO",
+        "pins": [
+          { "id": "5V", "role": "power" },
+          { "id": "GND", "role": "ground" }
+        ],
+        "specs": { "operating_voltage_v": 5, "digital_pins": 14, "analog_pins": 6 }
+      },
+      {
+        "id": "resistor_1",
+        "type": "resistor",
+        "label": "220 ohm resistor",
+        "pins": [
+          { "id": "a", "role": "passive" },
+          { "id": "b", "role": "passive" }
+        ],
+        "specs": { "resistance_ohm": 220 }
+      },
+      {
+        "id": "led_1",
+        "type": "led",
+        "label": "Red LED",
+        "pins": [
+          { "id": "anode", "role": "passive" },
+          { "id": "cathode", "role": "passive" }
+        ],
+        "specs": { "color": "red", "forward_voltage_v": 2.0, "max_current_ma": 20 }
+      }
+    ],
+    "edges": [
+      { "id": "w1", "from": { "node_id": "arduino_1", "pin_id": "5V" }, "to": { "node_id": "resistor_1", "pin_id": "a" } },
+      { "id": "w2", "from": { "node_id": "resistor_1", "pin_id": "b" }, "to": { "node_id": "led_1", "pin_id": "anode" } },
+      { "id": "w3", "from": { "node_id": "led_1", "pin_id": "cathode" }, "to": { "node_id": "arduino_1", "pin_id": "GND" } }
+    ]
+  }
+}

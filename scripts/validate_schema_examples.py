@@ -7,16 +7,21 @@ from jsonschema import Draft202012Validator
 
 ROOT = Path(__file__).resolve().parent.parent
 SCHEMA_PATH = ROOT / "schema" / "v1" / "circuit-graph.schema.json"
-EXAMPLES_DIR = ROOT / "schema" / "v1" / "examples"
+EXAMPLES_DIRS = [
+    ROOT / "schema" / "v1" / "examples",
+    ROOT / "examples" / "hello_circuit" / "circuits",
+]
 
 
 def main() -> int:
     schema = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
     validator = Draft202012Validator(schema)
 
-    examples = sorted(EXAMPLES_DIR.glob("*.json"))
+    examples = sorted(
+        path for examples_dir in EXAMPLES_DIRS for path in examples_dir.glob("*.json")
+    )
     if not examples:
-        print(f"No example files found in {EXAMPLES_DIR}")
+        print(f"No example files found in {EXAMPLES_DIRS}")
         return 1
 
     had_errors = False
