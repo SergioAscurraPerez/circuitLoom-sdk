@@ -1,6 +1,6 @@
 extends GdUnitTestSuite
 
-const F := RulesEngineFixtures
+const F := preload("res://tests/unit/rules_engine/fixtures.gd")
 
 
 func test_servo_driven_directly_from_5v_is_valid() -> void:

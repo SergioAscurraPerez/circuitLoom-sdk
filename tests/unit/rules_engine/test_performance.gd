@@ -1,6 +1,6 @@
 extends GdUnitTestSuite
 
-const F := RulesEngineFixtures
+const F := preload("res://tests/unit/rules_engine/fixtures.gd")
 const MAX_DURATION_USEC := 16000  # 16ms frame budget
 const BRANCH_COUNT := 60
 

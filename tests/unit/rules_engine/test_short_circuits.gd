@@ -1,6 +1,6 @@
 extends GdUnitTestSuite
 
-const F := RulesEngineFixtures
+const F := preload("res://tests/unit/rules_engine/fixtures.gd")
 
 
 func test_direct_wire_short() -> void:

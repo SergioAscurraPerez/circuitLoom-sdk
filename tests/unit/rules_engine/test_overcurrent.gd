@@ -1,6 +1,6 @@
 extends GdUnitTestSuite
 
-const F := RulesEngineFixtures
+const F := preload("res://tests/unit/rules_engine/fixtures.gd")
 
 
 func test_led_without_series_resistor_is_flagged_as_damaged() -> void:
