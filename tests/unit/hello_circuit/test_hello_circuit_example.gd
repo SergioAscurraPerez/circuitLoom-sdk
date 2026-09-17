@@ -39,3 +39,15 @@ func test_reference_example_fires_on_component_damaged() -> void:
 
 func test_run_executes_without_error() -> void:
 	HelloCircuit.run()
+
+
+func test_run_spawns_failure_effects_under_effects_root_on_short_circuit() -> void:
+	var effects_root := auto_free(Node3D.new())
+	add_child(effects_root)
+
+	HelloCircuit.run(effects_root)
+
+	# Only circuits/short_circuit.json (one short circuit) triggers the
+	# effects among the three reference circuits run() checks — one
+	# spark + one smoke child.
+	assert_int(effects_root.get_child_count()).is_equal(2)

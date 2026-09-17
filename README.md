@@ -61,7 +61,8 @@ three events (`on_short_circuit`, `on_component_damaged`, `on_circuit_valid`) co
 can connect to from outside the core — see [`docs/events.md`](docs/events.md). The 10
 components modeled for v1 — the same ones in a typical Arduino UNO starter kit — have
 specs verified against real datasheets and a placeholder 3D model each — see
-[`docs/components.md`](docs/components.md).
+[`docs/components.md`](docs/components.md). A ready-to-use spark/smoke reference effect
+ships for short-circuit feedback — see [`docs/effects.md`](docs/effects.md).
 
 ## Contributing
 
