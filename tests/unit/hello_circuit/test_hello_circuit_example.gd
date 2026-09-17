@@ -42,8 +42,8 @@ func test_run_executes_without_error() -> void:
 
 
 func test_run_spawns_failure_effects_under_effects_root_on_short_circuit() -> void:
-	var effects_root := auto_free(Node3D.new())
-	add_child(effects_root)
+	var effects_root := Node3D.new()
+	add_child(auto_free(effects_root))
 
 	HelloCircuit.run(effects_root)
 
