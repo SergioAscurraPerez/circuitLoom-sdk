@@ -28,11 +28,13 @@ func _build() -> void:
 	initial_velocity_min = 1.2
 	initial_velocity_max = 3.0
 	gravity = Vector3(0, -9.8, 0)
-	scale_amount_min = 0.02
-	scale_amount_max = 0.05
+	scale_amount_min = 0.5
+	scale_amount_max = 1.2
 	color = _COLOR
 
-	emitting = true
+	# restart(), not `emitting = true`: with the latter this explosive one-shot burst
+	# rendered nothing when spawned into a running scene.
+	restart()
 	_schedule_cleanup()
 
 
@@ -45,11 +47,9 @@ func _build_mesh() -> QuadMesh:
 func _build_material() -> StandardMaterial3D:
 	var material := StandardMaterial3D.new()
 	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.vertex_color_use_as_albedo = true
 	material.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
 	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	material.emission_enabled = true
-	material.emission = _COLOR
-	material.emission_energy_multiplier = 2.0
 	return material
 
 
