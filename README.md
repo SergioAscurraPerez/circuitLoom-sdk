@@ -3,7 +3,8 @@
 [![CI](https://github.com/SergioAscurraPerez/circuitLoom-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/SergioAscurraPerez/circuitLoom-sdk/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-> **Status: early development (pre-v0.1.0).** APIs and schemas are not yet stable.
+> **Status: v0.1.0 — first public release.** The v1 circuit schema is versioned, but APIs
+> may still change before 1.0. See the [CHANGELOG](CHANGELOG.md).
 
 CircuitLoom SDK is an open-source **Godot Engine addon** for simulating real electronic
 circuits — the same components found in an Arduino UNO starter kit (LEDs, resistors,
@@ -41,19 +42,60 @@ educators and game developers building electronics-learning experiences (e.g. an
 Arduino-UNO-compatible teaching sandbox), not circuit designers producing a finished
 schematic.
 
+## Demo
+
+![CircuitLoom demo: a bare wire from 5V to GND fires on_short_circuit and spawns the spark and smoke reference effect](docs/media/demo.gif)
+
+Three circuits are checked in turn: a valid one (`on_circuit_valid`), a bare wire from
+5V to GND (`on_short_circuit`, which spawns the spark/smoke effect), and an LED with no
+series resistor (`on_component_damaged`). Source:
+[`examples/hello_circuit/demo_scene.gd`](examples/hello_circuit/demo_scene.gd).
+
 ## Installation
 
-> Not yet published to the Godot Asset Library (tracked as SDK-08 in the project backlog).
-> Until then, clone this repo (or add it as a submodule) into your project's `addons/`
-> folder as `addons/circuitloom_sdk/`, then enable **CircuitLoom SDK** under
-> **Project > Project Settings > Plugins**.
+Requires **Godot 4.5+**. It takes about two minutes:
 
-Requires **Godot 4.5+**.
+1. Download **Source code (zip)** from the latest
+   [release](https://github.com/SergioAscurraPerez/circuitLoom-sdk/releases) (or use
+   **Code > Download ZIP**). The zip only contains the addon, the license and these docs.
+2. Copy the `addons/circuitloom_sdk/` folder from the zip into your project's `addons/`
+   folder, so you end up with `res://addons/circuitloom_sdk/plugin.cfg`.
+3. In Godot, open **Project > Project Settings > Plugins** and enable
+   **CircuitLoom SDK**.
 
-## Status
+Installing from the Godot Asset Library will be available once the SDK is listed there.
 
-This SDK is being built in public, in order, against a public backlog. The circuit
-data model is a versioned, serializable graph — see
+## Quick start
+
+Create a `CircuitMonitor`, connect to the events you care about, and hand it a circuit
+(a [schema v1](docs/circuit-graph-schema.md) document):
+
+```gdscript
+extends Node3D
+
+const FailureEffects := preload("res://addons/circuitloom_sdk/src/effects/failure_effects.gd")
+
+
+func _ready() -> void:
+	var monitor := CircuitMonitor.new()
+
+	monitor.on_circuit_valid.connect(func(): print("circuit is valid"))
+	monitor.on_component_damaged.connect(func(details): print("damaged: ", details))
+	monitor.on_short_circuit.connect(
+		func(_details): FailureEffects.spawn_short_circuit(self, Vector3(0, 0.05, 0))
+	)
+
+	var text := FileAccess.get_file_as_string("res://my_circuit.json")
+	monitor.check(JSON.parse_string(text))
+```
+
+A runnable version with three sample circuits lives in
+[`examples/hello_circuit/`](examples/hello_circuit/), explained step by step in
+[`docs/events.md`](docs/events.md).
+
+## What's inside
+
+The circuit data model is a versioned, serializable graph — see
 [`docs/circuit-graph-schema.md`](docs/circuit-graph-schema.md) — a simplified rules
 engine computes voltage/current per node on top of it — see
 [`docs/rules-engine.md`](docs/rules-engine.md) — and `CircuitMonitor` exposes that as
