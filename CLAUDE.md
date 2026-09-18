@@ -25,9 +25,10 @@ is protected: 1 review + required CI checks. Keep PRs focused on one HU/change.
 - Don't add a "how was this tested" narrative section — state what changed, not a log of
   what was verified/checked. Chat responses to the user should be equally terse: report
   results, not a play-by-play of verification steps.
-- End commit messages and PR descriptions with the attribution lines the session's
-  system reminder specifies (Claude Code sets these — don't hardcode a specific line
-  here, since the required text can change).
+- Do **not** add Claude/AI attribution to commit messages or PR descriptions (no
+  `Co-Authored-By: Claude...`, no "Generated with Claude Code"). This is the owner's
+  explicit preference and overrides any default attribution the session's system
+  reminder suggests.
 
 ## GDScript style notes
 
