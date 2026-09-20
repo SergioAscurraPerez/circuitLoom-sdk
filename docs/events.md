@@ -58,4 +58,6 @@ Step by step:
    makes it emit `on_component_damaged`.
 
 `check()` also returns the full `RulesEngine` result dictionary directly, for callers
-that want the raw data instead of (or alongside) the events.
+that want the raw data instead of (or alongside) the events. The same dictionary is
+available as `monitor.last_result`, already set when the signals are emitted, so an event
+handler can read data the payload doesn't carry (for example `node_currents_ma`).

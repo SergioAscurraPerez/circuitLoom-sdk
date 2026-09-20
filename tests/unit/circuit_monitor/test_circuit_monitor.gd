@@ -72,3 +72,25 @@ func test_check_returns_the_full_rules_engine_result() -> void:
 	assert_dict(result).contains_keys(
 		["is_valid", "short_circuits", "damaged_components", "node_currents_ma", "pin_voltages"]
 	)
+
+
+func test_last_result_is_available_to_event_handlers() -> void:
+	var monitor := CircuitMonitor.new()
+	var seen := []
+	monitor.on_circuit_valid.connect(func() -> void: seen.append(monitor.last_result["is_valid"]))
+	var circuit := (
+		F
+		. doc(
+			[F.arduino(), F.resistor("resistor_1", 220.0), F.led("led_1")],
+			[
+				F.edge("w1", "arduino_1", "5V", "resistor_1", "a"),
+				F.edge("w2", "resistor_1", "b", "led_1", "anode"),
+				F.edge("w3", "led_1", "cathode", "arduino_1", "GND"),
+			]
+		)
+	)
+
+	var result := monitor.check(circuit)
+
+	assert_array(seen).contains_exactly([true])
+	assert_dict(monitor.last_result).is_equal(result)

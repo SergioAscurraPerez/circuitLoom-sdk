@@ -54,6 +54,30 @@ apply modifiers, embedded materials/images, no cameras or lights, no animation.
 Then open the project in Godot once so it imports the file, and commit the generated
 `<type>.glb.import` next to it.
 
+## LED states
+
+`LedState` (`addons/circuitloom_sdk/src/components/led_state.gd`) shows an LED model as off,
+on or burned by changing the material of its `STATE_Lens` part, and follows the circuit
+events (see [events.md](events.md)):
+
+```gdscript
+var led := ComponentCatalog.build_component("led")
+add_child(led)
+
+var led_state := LedState.new(led)
+led_state.bind(monitor, "led_1")  # "led_1" is the LED's node id in the circuit
+```
+
+| Event | LED |
+|---|---|
+| `on_circuit_valid` | on if current flows through it, off otherwise |
+| `on_short_circuit` | off |
+| `on_component_damaged` for its node | burned, and it stays burned until `led_state.reset()` |
+
+Each LED gets its own copy of the material, so lighting one never lights the others. A
+model without a `STATE_Lens` is left untouched (`is_attached()` is `false`), so the
+primitive fallback keeps working.
+
 ## Validating
 
 ```bash

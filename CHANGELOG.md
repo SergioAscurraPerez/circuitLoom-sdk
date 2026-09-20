@@ -16,6 +16,11 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   model when it exists and satisfies the contract, and falls back to the primitive
   placeholder otherwise.
 
+- `LedState`: shows the LED model as off, on or burned by changing the material of its
+  `STATE_Lens` part, driven by `on_circuit_valid`, `on_short_circuit` and
+  `on_component_damaged` ([docs](docs/models.md#led-states)).
+- `CircuitMonitor.last_result`: the latest `check()` result, readable from event handlers.
+
 ### Changed
 
 - Resistor pins are `a`/`b` in the schema v1 example, matching the rest of the examples and
