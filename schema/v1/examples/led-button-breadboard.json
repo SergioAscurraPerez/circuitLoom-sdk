@@ -40,8 +40,8 @@
         "type": "resistor",
         "label": "220 ohm resistor",
         "pins": [
-          { "id": "terminal_a", "role": "passive" },
-          { "id": "terminal_b", "role": "passive" }
+          { "id": "a", "role": "passive" },
+          { "id": "b", "role": "passive" }
         ],
         "specs": {
           "resistance_ohm": 220,
@@ -81,8 +81,8 @@
     "edges": [
       { "id": "w1", "from": { "node_id": "arduino_1", "pin_id": "5V" }, "to": { "node_id": "breadboard_1", "pin_id": "PWR_RAIL_POS" }, "wire_color": "red" },
       { "id": "w2", "from": { "node_id": "arduino_1", "pin_id": "GND" }, "to": { "node_id": "breadboard_1", "pin_id": "PWR_RAIL_NEG" }, "wire_color": "black" },
-      { "id": "w3", "from": { "node_id": "arduino_1", "pin_id": "D9" }, "to": { "node_id": "resistor_1", "pin_id": "terminal_a" }, "wire_color": "yellow" },
-      { "id": "w4", "from": { "node_id": "resistor_1", "pin_id": "terminal_b" }, "to": { "node_id": "led_1", "pin_id": "anode" }, "wire_color": "yellow" },
+      { "id": "w3", "from": { "node_id": "arduino_1", "pin_id": "D9" }, "to": { "node_id": "resistor_1", "pin_id": "a" }, "wire_color": "yellow" },
+      { "id": "w4", "from": { "node_id": "resistor_1", "pin_id": "b" }, "to": { "node_id": "led_1", "pin_id": "anode" }, "wire_color": "yellow" },
       { "id": "w5", "from": { "node_id": "led_1", "pin_id": "cathode" }, "to": { "node_id": "breadboard_1", "pin_id": "PWR_RAIL_NEG" }, "wire_color": "black" },
       { "id": "w6", "from": { "node_id": "button_1", "pin_id": "leg_a" }, "to": { "node_id": "arduino_1", "pin_id": "D2" }, "wire_color": "orange" },
       { "id": "w7", "from": { "node_id": "button_1", "pin_id": "leg_b" }, "to": { "node_id": "breadboard_1", "pin_id": "PWR_RAIL_NEG" }, "wire_color": "black" }

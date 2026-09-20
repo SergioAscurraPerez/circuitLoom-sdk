@@ -1,10 +1,12 @@
 class_name ComponentCatalog
 extends RefCounted
 
-## Instantiates the 10 v1 component placeholder models
-## (addons/circuitloom_sdk/src/components/*.gd) for a scene. Every entry is a
-## preloaded script reference, not a runtime class_name lookup or an external
-## .tscn — see CLAUDE.md for why that matters for avoiding broken references.
+## Instantiates the 10 v1 component models for a scene. A component uses its realistic
+## glTF model (models/<type>.glb, see ModelLoader) when one exists and satisfies the
+## model contract; otherwise it falls back to the placeholder built by its script
+## (addons/circuitloom_sdk/src/components/*.gd). Every fallback entry is a preloaded
+## script reference, not a runtime class_name lookup or an external .tscn — see
+## CLAUDE.md for why that matters for avoiding broken references.
 
 const GRID_SPACING := 0.1
 
@@ -30,8 +32,10 @@ static func component_types() -> Array:
 static func build_component(component_type: String) -> Node3D:
 	if not _COMPONENT_SCRIPTS.has(component_type):
 		return null
-	var script: Script = _COMPONENT_SCRIPTS[component_type]
-	var instance: Node3D = script.new()
+	var instance := ModelLoader.load_model(component_type)
+	if instance == null:
+		var script: Script = _COMPONENT_SCRIPTS[component_type]
+		instance = script.new()
 	instance.name = component_type
 	return instance
 

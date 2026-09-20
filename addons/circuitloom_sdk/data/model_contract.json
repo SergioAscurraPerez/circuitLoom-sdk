@@ -1,0 +1,60 @@
+{
+  "schema_version": "v1",
+  "notes": "Contract every glTF model under addons/circuitloom_sdk/models/<type>.glb must satisfy. 'pins' are the PIN_<id> nodes (ids match the circuit graph pin ids); 'parts' are the STATE_*/MOVE_* nodes the SDK drives at runtime; 'extent_m' is a sanity range for the model's longest dimension in meters, meant to catch unit/scale mistakes (e.g. exporting millimeters as meters), not a datasheet spec.",
+  "components": {
+    "arduino_uno": {
+      "pins": [
+        "5V", "GND",
+        "D0", "D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9", "D10", "D11", "D12", "D13",
+        "A0", "A1", "A2", "A3", "A4", "A5"
+      ],
+      "parts": ["STATE_LED_ON", "STATE_LED_L"],
+      "extent_m": [0.06, 0.09]
+    },
+    "led": {
+      "pins": ["anode", "cathode"],
+      "parts": ["STATE_Lens"],
+      "extent_m": [0.02, 0.05]
+    },
+    "resistor": {
+      "pins": ["a", "b"],
+      "parts": [],
+      "extent_m": [0.008, 0.04]
+    },
+    "push_button": {
+      "pins": ["leg_a", "leg_b"],
+      "parts": ["MOVE_Cap"],
+      "extent_m": [0.005, 0.02]
+    },
+    "buzzer": {
+      "pins": ["pos", "neg"],
+      "parts": [],
+      "extent_m": [0.01, 0.035]
+    },
+    "servo_motor": {
+      "pins": ["vcc", "gnd", "sig"],
+      "parts": ["MOVE_Horn"],
+      "extent_m": [0.025, 0.25]
+    },
+    "potentiometer": {
+      "pins": ["a", "wiper", "b"],
+      "parts": ["MOVE_Knob"],
+      "extent_m": [0.008, 0.035]
+    },
+    "ultrasonic_sensor": {
+      "pins": ["vcc", "trig", "echo", "gnd"],
+      "parts": [],
+      "extent_m": [0.04, 0.06]
+    },
+    "breadboard": {
+      "pins": ["PWR_RAIL_POS", "PWR_RAIL_NEG"],
+      "parts": [],
+      "extent_m": [0.14, 0.2]
+    },
+    "photoresistor": {
+      "pins": ["a", "b"],
+      "parts": [],
+      "extent_m": [0.004, 0.04]
+    }
+  }
+}
