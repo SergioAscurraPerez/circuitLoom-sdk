@@ -9,9 +9,14 @@ signal on_short_circuit(details: Dictionary)
 signal on_component_damaged(details: Dictionary)
 signal on_circuit_valid
 
+## The result of the latest check(), already set when its signals are emitted, so a
+## handler can read data the event payload doesn't carry (e.g. `node_currents_ma`).
+var last_result: Dictionary = {}
+
 
 func check(circuit_doc: Dictionary) -> Dictionary:
 	var result := RulesEngine.new().evaluate(circuit_doc)
+	last_result = result
 
 	for short_circuit in result["short_circuits"]:
 		on_short_circuit.emit(short_circuit)
