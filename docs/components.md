@@ -60,4 +60,6 @@ resource reference. `ComponentCatalog.build() ` instantiates all 10 into one `No
 asserts all 10 load with no null nodes and no orphaned children.
 
 This is placeholder-quality geometry, not sculpted art — good enough to tell components
-apart and wire up in an editor, not a final visual pass.
+apart and wire up in an editor, not a final visual pass. A component with a realistic
+glTF model in `addons/circuitloom_sdk/models/` uses it instead, and falls back to its
+placeholder if the model is missing or breaks the contract — see [models.md](models.md).

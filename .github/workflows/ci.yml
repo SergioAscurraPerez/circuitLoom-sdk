@@ -34,6 +34,7 @@ jobs:
       - run: python scripts/validate_schema_examples.py
       - run: python scripts/validate_components_catalog.py
       - run: python scripts/validate_wire_colors.py
+      - run: python scripts/validate_models.py
 
   test:
     name: Tests (gdUnit4)

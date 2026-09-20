@@ -7,6 +7,20 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- Model contract for realistic glTF component models (`data/model_contract.json`), a
+  `ModelLoader` that validates them, and `scripts/validate_models.py` for CI
+  ([docs](docs/models.md)).
+- Realistic glTF model for the LED (`models/led.glb`). `ComponentCatalog` uses a component's
+  model when it exists and satisfies the contract, and falls back to the primitive
+  placeholder otherwise.
+
+### Changed
+
+- Resistor pins are `a`/`b` in the schema v1 example, matching the rest of the examples and
+  tests.
+
 ## [0.1.0] - 2026-09-18
 
 First public release.
