@@ -6,7 +6,9 @@ for each. This is the canonical source for `node.specs` when authoring a schema 
 circuit (see [`circuit-graph-schema.md`](circuit-graph-schema.md)).
 
 - Data: [`addons/circuitloom_sdk/data/components.json`](../addons/circuitloom_sdk/data/components.json)
-- 3D placeholder models: `addons/circuitloom_sdk/src/components/*.gd` (see below)
+- 3D models: real-scale glTF models in `addons/circuitloom_sdk/models/` (see
+  [models.md](models.md)), with primitive placeholders in
+  `addons/circuitloom_sdk/src/components/*.gd` as fallback (see below)
 - Validator: `scripts/validate_components_catalog.py`, run in CI on every PR — checks
   every entry's `specs` against the matching `$defs/specs/<type>` subschema in
   `schema/v1/circuit-graph.schema.json`
@@ -49,9 +51,16 @@ own well-established convention — **brown = GND, red = VCC, orange = signal** 
 differs from the general rule above (signal, not power, is orange there) because it's
 the servo's own fixed cable, not a wire you choose the color for.
 
-## 3D placeholder models
+## 3D models
 
-Each component has a minimal, primitive-based ("low-poly") 3D representation under
+Every component ships a realistic, real-scale glTF model in
+`addons/circuitloom_sdk/models/<type>.glb`, with a pin node per circuit pin and the
+parts the SDK drives at runtime (see [models.md](models.md)). `ComponentCatalog` uses it
+whenever it exists and satisfies the model contract.
+
+### Placeholder fallback
+
+Each component also has a minimal, primitive-based ("low-poly") 3D representation under
 `addons/circuitloom_sdk/src/components/` — boxes/cylinders/spheres assembled in code via
 `ComponentBuilder`, no external mesh/texture files. This means there's nothing to import
 and nothing that can go missing: instantiating any of them can't produce a broken
@@ -59,7 +68,5 @@ resource reference. `ComponentCatalog.build() ` instantiates all 10 into one `No
 `tests/unit/components/test_component_catalog.gd` adds that to the scene tree and
 asserts all 10 load with no null nodes and no orphaned children.
 
-This is placeholder-quality geometry, not sculpted art — good enough to tell components
-apart and wire up in an editor, not a final visual pass. A component with a realistic
-glTF model in `addons/circuitloom_sdk/models/` uses it instead, and falls back to its
-placeholder if the model is missing or breaks the contract — see [models.md](models.md).
+This is placeholder-quality geometry, not sculpted art. It is only used when a
+component's glTF model is missing or breaks the contract, so a component always builds.

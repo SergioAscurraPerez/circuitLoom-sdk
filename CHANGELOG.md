@@ -20,11 +20,26 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   `STATE_Lens` part, driven by `on_circuit_valid`, `on_short_circuit` and
   `on_component_damaged` ([docs](docs/models.md#led-states)).
 - `CircuitMonitor.last_result`: the latest `check()` result, readable from event handlers.
+- Realistic glTF models for the other nine components: Arduino UNO, breadboard, resistor,
+  push button, buzzer, SG90 servo, potentiometer, HC-SR04 ultrasonic sensor and
+  photoresistor. All 10 catalog components now use a real-scale model.
 
 ### Changed
 
 - Resistor pins are `a`/`b` in the schema v1 example, matching the rest of the examples and
   tests.
+- The spark and smoke effects are authored at real-world scale in local coordinates, so
+  they scale and move with the component they are spawned under
+  ([docs](docs/effects.md#scale-and-position)). Particles are now round and soft-edged, and
+  the sparks are HDR so they bloom with glow.
+- The hello_circuit demo scene shows the starter-kit components on the breadboard, the
+  LED following the circuit events, sparks on the Arduino's power header, and a lit
+  environment (glow, SSAO, screen-space reflections, shadows). `demo.gif` re-recorded.
+
+### Fixed
+
+- The spark and smoke particles ignored their parent's scale and their own per-particle
+  scale, because billboarded particles drop it unless `billboard_keep_scale` is set.
 
 ## [0.1.0] - 2026-09-18
 
