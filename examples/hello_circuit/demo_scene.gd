@@ -2,11 +2,15 @@ extends SceneTree
 
 ## Visual demo: the three hello_circuit circuits are checked in turn and
 ## `on_short_circuit` spawns the spark/smoke reference effect over a scaled-up
-## Arduino UNO placeholder. Run it in a window with:
+## Arduino UNO next to a breadboard. Run it in a window with:
 ## godot --path . --script res://examples/hello_circuit/demo_scene.gd
 
 const FailureEffects := preload("res://addons/circuitloom_sdk/src/effects/failure_effects.gd")
 const BOARD_SCALE := 10.0
+# Real-world offsets (meters, pre-scale) so both boards keep their true relative
+# size and sit side by side with a gap instead of overlapping.
+const BREADBOARD_OFFSET := Vector3(-0.055, 0.0, 0.0)
+const ARDUINO_OFFSET := Vector3(0.08, 0.0, 0.0)
 
 var _status: Label
 var _scene_root: Node3D
@@ -36,12 +40,21 @@ func _build_scene() -> void:
 
 	var camera := Camera3D.new()
 	_scene_root.add_child(camera)
-	camera.look_at_from_position(Vector3(0.0, 0.42, 0.62), Vector3(0.0, 0.16, 0.0))
+	camera.look_at_from_position(Vector3(0.0, 0.67, 0.99), Vector3(0.0, 0.18, 0.0))
 	camera.current = true
 
+	var rig := Node3D.new()
+	rig.name = "Boards"
+	rig.scale = Vector3.ONE * BOARD_SCALE
+	_scene_root.add_child(rig)
+
+	var breadboard: Node3D = ComponentCatalog.build_component("breadboard")
+	breadboard.position = BREADBOARD_OFFSET
+	rig.add_child(breadboard)
+
 	var board: Node3D = ComponentCatalog.build_component("arduino_uno")
-	board.scale = Vector3.ONE * BOARD_SCALE
-	_scene_root.add_child(board)
+	board.position = ARDUINO_OFFSET
+	rig.add_child(board)
 
 	var layer := CanvasLayer.new()
 	root.add_child(layer)
