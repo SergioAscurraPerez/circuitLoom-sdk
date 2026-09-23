@@ -32,7 +32,7 @@ block inside a game or interactive experience**, not as a destination tool. Conc
   `on_component_damaged`, and `on_circuit_valid` without touching the internals of the
   rules engine, which is what makes it usable inside a game loop instead of only a
   one-shot validation pass.
-- **3D and feedback-ready.** Low-poly component models, standard wire color coding, and
+- **3D and feedback-ready.** Real-scale glTF component models, standard wire color coding, and
   ready-to-use spark/smoke failure effects come with the SDK, so an interactive scene
   doesn't have to be built from scratch to *look and feel* like a real circuit.
 
@@ -44,11 +44,13 @@ schematic.
 
 ## Demo
 
-![CircuitLoom demo: a bare wire from 5V to GND fires on_short_circuit and spawns the spark and smoke reference effect](docs/media/demo.gif)
+![CircuitLoom demo: an Arduino UNO next to a breadboard with the v1 components; the LED lights up, a bare wire from 5V to GND sparks and smokes, and an LED with no resistor burns out](docs/media/demo.gif)
 
-Three circuits are checked in turn: a valid one (`on_circuit_valid`), a bare wire from
-5V to GND (`on_short_circuit`, which spawns the spark/smoke effect), and an LED with no
-series resistor (`on_component_damaged`). Source:
+An Arduino UNO next to a breadboard with the v1 starter-kit components on it. Three
+circuits are checked in turn: an LED with its resistor (`on_circuit_valid`, the LED
+lights up), a bare wire from 5V to GND (`on_short_circuit`, sparks and smoke on the
+Arduino's power header) and an LED with no series resistor (`on_component_damaged`, the
+LED burns out). Source:
 [`examples/hello_circuit/demo_scene.gd`](examples/hello_circuit/demo_scene.gd).
 
 ## Installation
@@ -102,8 +104,9 @@ engine computes voltage/current per node on top of it — see
 three events (`on_short_circuit`, `on_component_damaged`, `on_circuit_valid`) consumers
 can connect to from outside the core — see [`docs/events.md`](docs/events.md). The 10
 components modeled for v1 — the same ones in a typical Arduino UNO starter kit — have
-specs verified against real datasheets and a placeholder 3D model each — see
-[`docs/components.md`](docs/components.md). A ready-to-use spark/smoke reference effect
+specs verified against real datasheets and a real-scale glTF model each, with a primitive
+placeholder as fallback — see [`docs/components.md`](docs/components.md) and
+[`docs/models.md`](docs/models.md). A ready-to-use spark/smoke reference effect
 ships for short-circuit feedback — see [`docs/effects.md`](docs/effects.md).
 
 ## Contributing
