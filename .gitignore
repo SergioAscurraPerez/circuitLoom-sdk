@@ -5,6 +5,11 @@ export.cfg
 export_presets.cfg
 *.translation
 
+# gdUnit4: installed locally per CONTRIBUTING.md to run tests in the editor;
+# CI downloads and discards its own copy, so it's never committed here.
+/addons/gdUnit4/
+/reports/
+
 # Imported translations (automatically generated from CSV files)
 *.translation
 
