@@ -7,6 +7,8 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-09-23
+
 ### Added
 
 - Model contract for realistic glTF component models (`data/model_contract.json`), a
@@ -70,5 +72,6 @@ First public release.
 - Spark effect was invisible when spawned into a running scene: it now uses
   `restart()`, tints from the particle color, and uses a visible particle size.
 
-[Unreleased]: https://github.com/SergioAscurraPerez/circuitLoom-sdk/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/SergioAscurraPerez/circuitLoom-sdk/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/SergioAscurraPerez/circuitLoom-sdk/releases/tag/v0.2.0
 [0.1.0]: https://github.com/SergioAscurraPerez/circuitLoom-sdk/releases/tag/v0.1.0
