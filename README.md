@@ -118,3 +118,10 @@ convention, PR process, and how to run lint/tests locally. Please also read our
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+## Trademarks
+
+CircuitLoom SDK is an independent project, not affiliated with, endorsed by, or
+sponsored by Arduino S.r.l., Omron Corporation, TowerPro Pte Ltd, or any other hardware
+manufacturer referenced in this repository or its docs. Component names are used only to
+describe compatibility with real, publicly documented hardware — see [NOTICE](NOTICE).
