@@ -13,6 +13,10 @@ circuit (see [`circuit-graph-schema.md`](circuit-graph-schema.md)).
   every entry's `specs` against the matching `$defs/specs/<type>` subschema in
   `schema/v1/circuit-graph.schema.json`
 
+Component names (Arduino, Omron, TowerPro, etc.) are used only to describe compatibility
+with real, publicly documented hardware — see [NOTICE](../NOTICE) for the trademark
+notice.
+
 | Component | Part reference | Key specs | Source |
 |---|---|---|---|
 | Arduino UNO | Arduino UNO R3 (ATmega328P) | 5V, 14 digital pins, 6 analog pins, 6 PWM pins | [docs.arduino.cc](https://docs.arduino.cc/hardware/uno-rev3) |
