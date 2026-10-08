@@ -215,6 +215,8 @@
         "properties": {
           "operating_voltage_v": { "type": "number", "exclusiveMinimum": 0 },
           "stall_current_ma": { "type": "number", "exclusiveMinimum": 0 },
+          "idle_current_ma": { "type": "number", "exclusiveMinimum": 0 },
+          "stalled": { "type": "boolean" },
           "rotation_range_deg": { "type": "number", "exclusiveMinimum": 0 }
         }
       },

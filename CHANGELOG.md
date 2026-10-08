@@ -9,8 +9,16 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Added
 
+- `idle_current_ma` and `stalled` servo specs (schema v1, optional). The SG90 in
+  `components.json` has an idle current of 10mA.
 - `LedState.set_brightness(factor)`: scales the LED's ON glow from 0 to 1 (e.g. a PWM duty
   cycle) and keeps it across state changes ([docs](docs/models.md#brightness-pwm)).
+
+### Changed
+
+- `RulesEngine` evaluates a servo at its idle current, and at its stall current only when
+  it's marked `stalled` (or has no idle current), instead of always showing the 650mA
+  stall current ([docs](docs/rules-engine.md#model)).
 
 ### Fixed
 

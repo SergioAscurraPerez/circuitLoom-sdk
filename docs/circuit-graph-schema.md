@@ -46,7 +46,7 @@ same 10 components in a typical Arduino UNO starter kit — see
 | `resistor` | `resistance_ohm`, `tolerance_percent`, `max_power_w` |
 | `push_button` | `max_voltage_v`, `max_current_ma`, `normally_open` |
 | `buzzer` | `kind` (`active`/`passive`), `rated_voltage_v`, `max_current_ma` |
-| `servo_motor` | `operating_voltage_v`, `stall_current_ma`, `rotation_range_deg` |
+| `servo_motor` | `operating_voltage_v`, `stall_current_ma`, `idle_current_ma`, `stalled`, `rotation_range_deg` |
 | `potentiometer` | `resistance_ohm`, `taper` (`linear`/`logarithmic`) |
 | `ultrasonic_sensor` | `operating_voltage_v`, `max_current_ma`, `range_cm_min`, `range_cm_max` |
 | `breadboard` | `rows`, `columns`, `has_power_rails` |
