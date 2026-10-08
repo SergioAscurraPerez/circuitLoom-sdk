@@ -7,6 +7,12 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- LED polarity: `RulesEngine` only lets an LED conduct from `anode` to `cathode`, so an LED
+  wired backwards is an open branch, and `LedState` only lights an LED that is forward
+  biased ([docs](docs/rules-engine.md#model)).
+
 ## [0.2.0] - 2026-09-23
 
 ### Added

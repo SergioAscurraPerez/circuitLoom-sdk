@@ -67,7 +67,8 @@ func reset() -> void:
 
 
 ## Follows the circuit events for the circuit node `node_id`:
-## - on_circuit_valid: on if current flows through the LED, off otherwise;
+## - on_circuit_valid: on if current flows through the LED from anode to cathode, off
+##   otherwise (an LED wired backwards stays off);
 ## - on_short_circuit: off;
 ## - on_component_damaged for this node: burned.
 func bind(monitor: CircuitMonitor, node_id: String) -> void:
@@ -80,7 +81,18 @@ func _on_circuit_valid(monitor: CircuitMonitor, node_id: String) -> void:
 	if state == State.BURNED:
 		return
 	var currents: Dictionary = monitor.last_result.get("node_currents_ma", {})
-	set_state(State.ON if currents.get(node_id, 0.0) > 0.0 else State.OFF)
+	var lit: bool = currents.get(node_id, 0.0) > 0.0 and _is_forward_biased(monitor, node_id)
+	set_state(State.ON if lit else State.OFF)
+
+
+## False only when both lead voltages are known and the cathode sits above the anode.
+func _is_forward_biased(monitor: CircuitMonitor, node_id: String) -> bool:
+	var voltages: Dictionary = monitor.last_result.get("pin_voltages", {})
+	var anode_key := "%s:%s" % [node_id, RulesEngine.LED_ANODE_PIN]
+	var cathode_key := "%s:%s" % [node_id, RulesEngine.LED_CATHODE_PIN]
+	if not voltages.has(anode_key) or not voltages.has(cathode_key):
+		return true
+	return float(voltages[anode_key]) >= float(voltages[cathode_key])
 
 
 func _on_short_circuit(_details: Dictionary) -> void:

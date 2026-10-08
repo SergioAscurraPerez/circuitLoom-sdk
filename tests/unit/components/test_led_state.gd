@@ -160,3 +160,32 @@ func test_a_burned_led_stays_burned_when_the_circuit_becomes_valid() -> void:
 	monitor.check(HelloCircuitExample.load_circuit("valid"))
 
 	assert_int(led.state).is_equal(LedState.State.BURNED)
+
+
+func test_a_reverse_biased_led_stays_off() -> void:
+	var led := LedState.new(_led_model())
+	var monitor := CircuitMonitor.new()
+	led.bind(monitor, "led_1")
+	var edges := [
+		F.edge("w1", "arduino_1", "5V", "resistor_1", "a"),
+		F.edge("w2", "resistor_1", "b", "led_1", "cathode"),
+		F.edge("w3", "led_1", "anode", "arduino_1", "GND"),
+	]
+
+	monitor.check(F.doc([F.arduino(), F.resistor("resistor_1", 220.0), F.led("led_1")], edges))
+
+	assert_int(led.state).is_equal(LedState.State.OFF)
+
+
+func test_current_with_the_cathode_above_the_anode_does_not_light_the_led() -> void:
+	var led := LedState.new(_led_model())
+	var monitor := CircuitMonitor.new()
+	led.bind(monitor, "led_1")
+	monitor.last_result = {
+		"node_currents_ma": {"led_1": 10.0},
+		"pin_voltages": {"led_1:anode": 0.0, "led_1:cathode": 5.0},
+	}
+
+	monitor.on_circuit_valid.emit()
+
+	assert_int(led.state).is_equal(LedState.State.OFF)

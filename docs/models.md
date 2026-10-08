@@ -70,7 +70,7 @@ led_state.bind(monitor, "led_1")  # "led_1" is the LED's node id in the circuit
 
 | Event | LED |
 |---|---|
-| `on_circuit_valid` | on if current flows through it, off otherwise |
+| `on_circuit_valid` | on if current flows through it from anode to cathode, off otherwise (an LED wired backwards stays off) |
 | `on_short_circuit` | off |
 | `on_component_damaged` for its node | burned, and it stays burned until `led_state.reset()` |
 
