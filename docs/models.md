@@ -78,6 +78,18 @@ Each LED gets its own copy of the material, so lighting one never lights the oth
 model without a `STATE_Lens` is left untouched (`is_attached()` is `false`), so the
 primitive fallback keeps working.
 
+### Brightness (PWM)
+
+`set_brightness(factor)` scales the glow of the ON state, from `0.0` (dark) to `1.0` (full,
+the default). The factor is kept when the LED turns off and on again, and an LED that is
+already on updates right away, so a game can show an `analogWrite()` without touching the
+model's material:
+
+```gdscript
+# The sketch ran analogWrite(9, duty) with duty in 0..255.
+led_state.set_brightness(duty / 255.0)
+```
+
 ## Validating
 
 ```bash

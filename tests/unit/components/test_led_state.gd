@@ -189,3 +189,53 @@ func test_current_with_the_cathode_above_the_anode_does_not_light_the_led() -> v
 	monitor.on_circuit_valid.emit()
 
 	assert_int(led.state).is_equal(LedState.State.OFF)
+
+
+func test_brightness_scales_the_on_emission() -> void:
+	for factor in [0.0, 0.5, 1.0]:
+		var model := _led_model()
+		var led := LedState.new(model)
+
+		led.set_brightness(factor)
+		led.set_state(LedState.State.ON)
+
+		var expected: float = LedState.ON_EMISSION_ENERGY * factor
+		assert_float(_lens_material(model).emission_energy_multiplier).is_equal_approx(
+			expected, 0.001
+		)
+
+
+func test_brightness_applies_right_away_to_a_lit_led() -> void:
+	var model := _led_model()
+	var led := LedState.new(model)
+	led.set_state(LedState.State.ON)
+
+	led.set_brightness(0.5)
+
+	assert_float(_lens_material(model).emission_energy_multiplier).is_equal_approx(
+		LedState.ON_EMISSION_ENERGY * 0.5, 0.001
+	)
+
+
+func test_brightness_is_kept_when_the_led_turns_off_and_on_again() -> void:
+	var model := _led_model()
+	var led := LedState.new(model)
+	led.set_brightness(0.25)
+
+	led.set_state(LedState.State.ON)
+	led.set_state(LedState.State.OFF)
+	led.set_state(LedState.State.ON)
+
+	assert_float(_lens_material(model).emission_energy_multiplier).is_equal_approx(
+		LedState.ON_EMISSION_ENERGY * 0.25, 0.001
+	)
+
+
+func test_brightness_is_clamped_to_the_unit_range() -> void:
+	var led := LedState.new(_led_model())
+
+	led.set_brightness(1.8)
+	assert_float(led.brightness).is_equal(1.0)
+
+	led.set_brightness(-0.3)
+	assert_float(led.brightness).is_equal(0.0)
