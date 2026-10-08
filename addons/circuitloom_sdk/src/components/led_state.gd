@@ -7,7 +7,8 @@ extends RefCounted
 ## the material, so lighting one LED never lights the others sharing the same model.
 ##
 ## The LED keeps a reference to this object (as metadata), so there is no need to hold on
-## to it after binding it to a CircuitMonitor.
+## to it after binding it to a CircuitMonitor. It unbinds itself when the LED leaves the
+## scene tree, so a game can create and remove LEDs without piling up monitor connections.
 
 enum State { OFF, ON, BURNED }
 
@@ -21,12 +22,16 @@ var state: State = State.OFF
 ## Scales the emission of the ON state, from 0 (dark) to 1 (full); see set_brightness().
 var brightness: float = 1.0
 
+var _model: Node
+var _monitor: CircuitMonitor
+var _node_id: String
 var _material: StandardMaterial3D
 var _base_color: Color
 var _base_roughness: float
 
 
 func _init(led_model: Node) -> void:
+	_model = led_model
 	var lens := led_model.find_child(LENS_PART, true, false) as MeshInstance3D
 	if lens == null:
 		return
@@ -83,24 +88,43 @@ func reset() -> void:
 ## - on_short_circuit: off;
 ## - on_component_damaged for this node: burned.
 func bind(monitor: CircuitMonitor, node_id: String) -> void:
-	monitor.on_circuit_valid.connect(_on_circuit_valid.bind(monitor, node_id))
+	unbind()
+	_monitor = monitor
+	_node_id = node_id
+	monitor.on_circuit_valid.connect(_on_circuit_valid)
 	monitor.on_short_circuit.connect(_on_short_circuit)
-	monitor.on_component_damaged.connect(_on_component_damaged.bind(node_id))
+	monitor.on_component_damaged.connect(_on_component_damaged)
+	if is_instance_valid(_model):
+		_model.tree_exiting.connect(unbind)
 
 
-func _on_circuit_valid(monitor: CircuitMonitor, node_id: String) -> void:
+## Stops following the monitor's events; the LED keeps its current state. Called on its
+## own when the LED's model leaves the scene tree (re-adding it needs a new bind()).
+## Safe to call when not bound.
+func unbind() -> void:
+	if _monitor == null:
+		return
+	_monitor.on_circuit_valid.disconnect(_on_circuit_valid)
+	_monitor.on_short_circuit.disconnect(_on_short_circuit)
+	_monitor.on_component_damaged.disconnect(_on_component_damaged)
+	_monitor = null
+	if is_instance_valid(_model) and _model.tree_exiting.is_connected(unbind):
+		_model.tree_exiting.disconnect(unbind)
+
+
+func _on_circuit_valid() -> void:
 	if state == State.BURNED:
 		return
-	var currents: Dictionary = monitor.last_result.get("node_currents_ma", {})
-	var lit: bool = currents.get(node_id, 0.0) > 0.0 and _is_forward_biased(monitor, node_id)
+	var currents: Dictionary = _monitor.last_result.get("node_currents_ma", {})
+	var lit: bool = currents.get(_node_id, 0.0) > 0.0 and _is_forward_biased()
 	set_state(State.ON if lit else State.OFF)
 
 
 ## False only when both lead voltages are known and the cathode sits above the anode.
-func _is_forward_biased(monitor: CircuitMonitor, node_id: String) -> bool:
-	var voltages: Dictionary = monitor.last_result.get("pin_voltages", {})
-	var anode_key := "%s:%s" % [node_id, RulesEngine.LED_ANODE_PIN]
-	var cathode_key := "%s:%s" % [node_id, RulesEngine.LED_CATHODE_PIN]
+func _is_forward_biased() -> bool:
+	var voltages: Dictionary = _monitor.last_result.get("pin_voltages", {})
+	var anode_key := "%s:%s" % [_node_id, RulesEngine.LED_ANODE_PIN]
+	var cathode_key := "%s:%s" % [_node_id, RulesEngine.LED_CATHODE_PIN]
 	if not voltages.has(anode_key) or not voltages.has(cathode_key):
 		return true
 	return float(voltages[anode_key]) >= float(voltages[cathode_key])
@@ -111,6 +135,6 @@ func _on_short_circuit(_details: Dictionary) -> void:
 		set_state(State.OFF)
 
 
-func _on_component_damaged(details: Dictionary, node_id: String) -> void:
-	if details.get("node_id") == node_id:
+func _on_component_damaged(details: Dictionary) -> void:
+	if details.get("node_id") == _node_id:
 		set_state(State.BURNED)

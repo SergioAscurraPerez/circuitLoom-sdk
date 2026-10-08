@@ -13,6 +13,9 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   `components.json` has an idle current of 10mA.
 - `LedState.set_brightness(factor)`: scales the LED's ON glow from 0 to 1 (e.g. a PWM duty
   cycle) and keeps it across state changes ([docs](docs/models.md#brightness-pwm)).
+- `LedState.unbind()`, also called on its own when the LED's model leaves the scene tree,
+  so creating and removing LEDs leaves no connections on the `CircuitMonitor`
+  ([docs](docs/models.md#creating-and-removing-leds-at-runtime)).
 
 ### Changed
 
