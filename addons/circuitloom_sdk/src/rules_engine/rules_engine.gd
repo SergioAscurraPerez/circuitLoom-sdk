@@ -16,11 +16,11 @@ const LED_CATHODE_PIN := "cathode"
 
 ## type -> [voltage spec key, current spec key], for load types whose effective
 ## resistance is derived (rated voltage / rated current) rather than given
-## directly as a resistance spec.
+## directly as a resistance spec. A servo's current depends on its state (see
+## _servo_current_ma), so it isn't listed here.
 const RATED_VOLTAGE_CURRENT_SPEC_KEYS := {
 	"led": ["forward_voltage_v", "max_current_ma"],
 	"buzzer": ["rated_voltage_v", "max_current_ma"],
-	"servo_motor": ["operating_voltage_v", "stall_current_ma"],
 	"ultrasonic_sensor": ["operating_voltage_v", "max_current_ma"],
 }
 
@@ -292,11 +292,25 @@ func _effective_resistance_ohm(node: Dictionary) -> float:
 		# resistance (its highest, most conservative reading).
 		return float(specs.get("dark_resistance_ohm", 0.0))
 
+	if type == "servo_motor":
+		return _voltage_over_current(
+			specs.get("operating_voltage_v", 0.0), _servo_current_ma(specs)
+		)
+
 	if RATED_VOLTAGE_CURRENT_SPEC_KEYS.has(type):
 		var spec_keys: Array = RATED_VOLTAGE_CURRENT_SPEC_KEYS[type]
 		return _voltage_over_current(specs.get(spec_keys[0], 0.0), specs.get(spec_keys[1], 0.0))
 
 	return 0.0
+
+
+## A servo holding still draws its idle current; only one marked `stalled` (forced
+## against a load) draws its stall current. Graphs without `idle_current_ma` keep the
+## stall current, as before.
+func _servo_current_ma(specs: Dictionary) -> float:
+	if specs.get("stalled", false) or not specs.has("idle_current_ma"):
+		return float(specs.get("stall_current_ma", 0.0))
+	return float(specs["idle_current_ma"])
 
 
 func _voltage_over_current(voltage: Variant, current_ma: Variant) -> float:

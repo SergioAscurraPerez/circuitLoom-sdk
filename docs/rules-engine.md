@@ -31,7 +31,10 @@ var result := RulesEngine.new().evaluate(circuit_doc)
      evaluated at its highest (dark-state) resistance, the most conservative reading.
    - `led`/`buzzer`/`servo_motor`/`ultrasonic_sensor`: derived as
      `rated_voltage / rated_current`, from whichever voltage/current spec pair the
-     component has (e.g. an LED's `forward_voltage_v` / `max_current_ma`).
+     component has (e.g. an LED's `forward_voltage_v` / `max_current_ma`). A
+     `servo_motor` uses `idle_current_ma` (powered and holding still), or
+     `stall_current_ma` when its specs set `stalled: true` (forced against a load) or
+     don't give an idle current. Its damage limit is always `stall_current_ma`.
 
    An `led` is polarized: it only conducts from its `anode` pin to its `cathode` pin. Wired
    the other way round (cathode toward the source) its branch is open — no current, no

@@ -24,7 +24,7 @@ notice.
 | Resistor | 1/4W carbon/metal film, 220Ω 5% | 220Ω, 5%, 0.25W | [resistor color code calculator](https://www.allaboutcircuits.com/tools/resistor-color-code-calculator/) |
 | Push button | Omron B3F 6x6mm tactile switch | up to 24V, up to 50mA | [Omron B3F datasheet](https://omronfs.omron.com/en_US/ecb/products/pdf/en-b3f.pdf) |
 | Buzzer | Generic 5V active piezo buzzer | 5V rated, ~30mA | [components101](https://components101.com/misc/buzzer-pinout-working-datasheet) |
-| Servo motor | TowerPro SG90 | 5V, ~650mA stall, 180° | [TowerPro SG90 brochure](https://www.auselectronicsdirect.com.au/assets/brochures/TA0132.pdf) |
+| Servo motor | TowerPro SG90 | 5V, ~10mA idle, ~650mA stall, 180° | [TowerPro SG90 brochure](https://www.auselectronicsdirect.com.au/assets/brochures/TA0132.pdf) |
 | Potentiometer | Generic 10kΩ linear rotary pot | 10kΩ, linear | [SparkFun](https://www.sparkfun.com/rotary-potentiometer-10k-ohm-linear.html) |
 | Ultrasonic sensor | HC-SR04 | 5V, 15mA, 2-400cm range | [SparkFun HC-SR04 datasheet](https://cdn.sparkfun.com/datasheets/Sensors/Proximity/HCSR04.pdf) |
 | Breadboard | 830 tie-point full-size breadboard | 10x63 terminal strip + 4 power rails | [BusBoard BB830 datasheet](https://www.busboard.com/documents/datasheets/BPS-DAT-(KIT-BB830+SB830)-Datasheet.pdf) |

@@ -84,8 +84,21 @@ static func buzzer(
 
 
 static func servo_motor(
-	id: String, operating_voltage_v: float = 5.0, stall_current_ma: float = 250.0
+	id: String,
+	operating_voltage_v: float = 5.0,
+	stall_current_ma: float = 250.0,
+	idle_current_ma: Variant = null,
+	stalled: bool = false
 ) -> Dictionary:
+	var specs: Dictionary = {
+		"operating_voltage_v": operating_voltage_v,
+		"stall_current_ma": stall_current_ma,
+		"rotation_range_deg": 180
+	}
+	if idle_current_ma != null:
+		specs["idle_current_ma"] = idle_current_ma
+	if stalled:
+		specs["stalled"] = true
 	return {
 		"id": id,
 		"type": "servo_motor",
@@ -95,12 +108,7 @@ static func servo_motor(
 			{"id": "gnd", "role": "ground"},
 			{"id": "sig", "role": "pwm"},
 		],
-		"specs":
-		{
-			"operating_voltage_v": operating_voltage_v,
-			"stall_current_ma": stall_current_ma,
-			"rotation_range_deg": 180
-		},
+		"specs": specs,
 	}
 
 

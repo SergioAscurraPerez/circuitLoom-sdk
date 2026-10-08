@@ -44,9 +44,9 @@
       "type": "servo_motor",
       "display_name": "SG90 Micro Servo",
       "part_reference": "TowerPro SG90",
-      "specs": { "operating_voltage_v": 5, "stall_current_ma": 650, "rotation_range_deg": 180 },
+      "specs": { "operating_voltage_v": 5, "stall_current_ma": 650, "idle_current_ma": 10, "rotation_range_deg": 180 },
       "datasheet_source": "https://www.auselectronicsdirect.com.au/assets/brochures/TA0132.pdf",
-      "notes": "Operating voltage 4.8-6.6V (5V used here to match Arduino supply). Stall current varies by source (200-650mA); 650mA is the commonly cited figure across SG90 datasheets. Standard wire colors: brown=GND, red=VCC, orange=signal."
+      "notes": "Operating voltage 4.8-6.6V (5V used here to match Arduino supply). Stall current varies by source (200-650mA); 650mA is the commonly cited figure across SG90 datasheets. Idle current (powered, holding still, no load) is commonly cited around 10mA; the rules engine uses it unless the servo is marked stalled. Standard wire colors: brown=GND, red=VCC, orange=signal."
     },
     {
       "type": "potentiometer",
