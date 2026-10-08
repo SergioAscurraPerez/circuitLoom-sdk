@@ -7,6 +7,11 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- `LedState.set_brightness(factor)`: scales the LED's ON glow from 0 to 1 (e.g. a PWM duty
+  cycle) and keeps it across state changes ([docs](docs/models.md#brightness-pwm)).
+
 ### Fixed
 
 - LED polarity: `RulesEngine` only lets an LED conduct from `anode` to `cathode`, so an LED

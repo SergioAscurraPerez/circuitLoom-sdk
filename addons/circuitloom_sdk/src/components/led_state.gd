@@ -18,6 +18,8 @@ const BURNED_COLOR := Color(0.07, 0.05, 0.05)
 const BURNED_ROUGHNESS := 0.85
 
 var state: State = State.OFF
+## Scales the emission of the ON state, from 0 (dark) to 1 (full); see set_brightness().
+var brightness: float = 1.0
 
 var _material: StandardMaterial3D
 var _base_color: Color
@@ -55,10 +57,19 @@ func set_state(new_state: State) -> void:
 		State.ON:
 			_material.emission_enabled = true
 			_material.emission = _base_color
-			_material.emission_energy_multiplier = ON_EMISSION_ENERGY
+			_material.emission_energy_multiplier = ON_EMISSION_ENERGY * brightness
 		State.BURNED:
 			_material.albedo_color = BURNED_COLOR
 			_material.roughness = BURNED_ROUGHNESS
+
+
+## Sets how bright the LED glows when ON, e.g. an analogWrite() duty cycle (value / 255).
+## The factor is clamped to [0, 1] and kept across state changes; an LED that is already ON
+## updates right away.
+func set_brightness(factor: float) -> void:
+	brightness = clampf(factor, 0.0, 1.0)
+	if state == State.ON:
+		set_state(State.ON)
 
 
 ## A burned LED stays burned until reset, like a real one.
