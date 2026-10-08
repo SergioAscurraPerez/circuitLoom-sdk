@@ -78,6 +78,26 @@ Each LED gets its own copy of the material, so lighting one never lights the oth
 model without a `STATE_Lens` is left untouched (`is_attached()` is `false`), so the
 primitive fallback keeps working.
 
+### Creating and removing LEDs at runtime
+
+`bind()` connects the `LedState` to the monitor's three signals, and the LED unbinds itself
+when its model leaves the scene tree, so a game can add and remove LEDs freely without
+piling up connections on the monitor. Call `unbind()` to stop following the events
+earlier; the LED keeps its current look. A model removed from the tree and added back
+needs a new `bind()`.
+
+```gdscript
+func add_led(node_id: String) -> Node3D:
+	var led := ComponentCatalog.build_component("led")
+	add_child(led)
+	LedState.new(led).bind(monitor, node_id)
+	return led
+
+
+func remove_led(led: Node3D) -> void:
+	led.queue_free()  # leaving the tree unbinds its LedState from the monitor
+```
+
 ### Brightness (PWM)
 
 `set_brightness(factor)` scales the glow of the ON state, from `0.0` (dark) to `1.0` (full,
