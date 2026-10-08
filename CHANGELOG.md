@@ -23,6 +23,10 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   it's marked `stalled` (or has no idle current), instead of always showing the 650mA
   stall current ([docs](docs/rules-engine.md#model)).
 
+- The addon folder (`addons/circuitloom_sdk/`) ships its own copy of `LICENSE` and
+  `NOTICE`, so they travel with installs from the Godot Asset Library. The copyright holder
+  in `LICENSE` now matches `NOTICE` (Sergio Ascurra Perez).
+
 ### Fixed
 
 - LED polarity: `RulesEngine` only lets an LED conduct from `anode` to `cathode`, so an LED

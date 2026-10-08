@@ -1,0 +1,26 @@
+CircuitLoom SDK
+Copyright (c) 2026 Sergio Ascurra Perez
+
+This project is licensed under the MIT License — see LICENSE.
+
+Trademark notice
+-----------------
+
+CircuitLoom SDK is an independent open-source project. It is not affiliated with,
+endorsed by, or sponsored by Arduino S.r.l., Omron Corporation, TowerPro Pte Ltd, or any
+other hardware manufacturer referenced in this repository.
+
+Component specs in docs/components.md and addons/circuitloom_sdk/data/components.json
+are sourced from each manufacturer's public datasheet or reseller spec page (see the
+"Source" column in docs/components.md) for accuracy only. No manufacturer logo,
+wordmark, or other trademarked artwork is used in this project's 3D models, code, or
+documentation — component names are used only to describe compatibility with real,
+publicly documented hardware.
+
+Arduino® is a trademark of Arduino S.r.l.
+Omron® is a trademark of Omron Corporation.
+TowerPro® is a trademark of TowerPro Pte Ltd.
+
+All other product and company names mentioned in this repository are trademarks of
+their respective owners. Any use of these names is for identification and compatibility
+description purposes only and does not imply endorsement.
