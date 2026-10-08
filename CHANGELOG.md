@@ -7,6 +7,8 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-07
+
 ### Added
 
 - `idle_current_ma` and `stalled` servo specs (schema v1, optional). The SG90 in
@@ -22,7 +24,6 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - `RulesEngine` evaluates a servo at its idle current, and at its stall current only when
   it's marked `stalled` (or has no idle current), instead of always showing the 650mA
   stall current ([docs](docs/rules-engine.md#model)).
-
 - The addon folder (`addons/circuitloom_sdk/`) ships its own copy of `LICENSE` and
   `NOTICE`, so they travel with installs from the Godot Asset Library. The copyright holder
   in `LICENSE` now matches `NOTICE` (Sergio Ascurra Perez).
@@ -98,6 +99,7 @@ First public release.
 - Spark effect was invisible when spawned into a running scene: it now uses
   `restart()`, tints from the particle color, and uses a visible particle size.
 
-[Unreleased]: https://github.com/SergioAscurraPerez/circuitLoom-sdk/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/SergioAscurraPerez/circuitLoom-sdk/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/SergioAscurraPerez/circuitLoom-sdk/releases/tag/v0.3.0
 [0.2.0]: https://github.com/SergioAscurraPerez/circuitLoom-sdk/releases/tag/v0.2.0
 [0.1.0]: https://github.com/SergioAscurraPerez/circuitLoom-sdk/releases/tag/v0.1.0
