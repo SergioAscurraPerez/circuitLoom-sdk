@@ -32,6 +32,11 @@ var result := RulesEngine.new().evaluate(circuit_doc)
    - `led`/`buzzer`/`servo_motor`/`ultrasonic_sensor`: derived as
      `rated_voltage / rated_current`, from whichever voltage/current spec pair the
      component has (e.g. an LED's `forward_voltage_v` / `max_current_ma`).
+
+   An `led` is polarized: it only conducts from its `anode` pin to its `cathode` pin. Wired
+   the other way round (cathode toward the source) its branch is open — no current, no
+   damage — and in two antiparallel LEDs only the forward one conducts. An `led` whose pins
+   aren't named `anode`/`cathode` has no known orientation and is treated as non-polar.
 4. **Short circuits.** Two cases: (a) a net directly contains both a power-role and a
    ground-role pin (a bare wire, a closed switch, or any chain of those, ties them
    together), or (b) a resistive path from a power net to a ground net has ~0 total
@@ -50,7 +55,8 @@ var result := RulesEngine.new().evaluate(circuit_doc)
   digital output) isn't evaluated for current/damage in v1 — that requires knowing the
   pin's runtime HIGH/LOW state, which isn't part of the static graph. It's still checked
   for direct shorts.
-- **No diode polarity check.** An LED wired backwards isn't flagged.
+- **No reverse breakdown.** A reverse-biased LED is simply open; it's never damaged by a
+  reverse voltage beyond its rating.
 - **No light model.** A `photoresistor` is a fixed resistor in v1, always at its
   dark-state resistance — it doesn't actually respond to a simulated light level.
 - **Single ideal voltage source.** No internal source resistance, no total-current limit

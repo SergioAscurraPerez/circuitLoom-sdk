@@ -9,6 +9,11 @@ const MAX_PATH_HOPS := 12
 const MAX_PATHS_PER_SOURCE := 500
 const EPSILON := 1e-6
 
+## An LED only conducts from its anode to its cathode; wired the other way round its
+## branch is left open.
+const LED_ANODE_PIN := "anode"
+const LED_CATHODE_PIN := "cathode"
+
 ## type -> [voltage spec key, current spec key], for load types whose effective
 ## resistance is derived (rated voltage / rated current) rather than given
 ## directly as a resistance spec.
@@ -112,7 +117,8 @@ func evaluate(circuit_doc: Dictionary) -> Dictionary:
 		var resistance := _effective_resistance_ohm(node)
 		var max_current := _max_current_ma(node)
 		_add_adjacency(adjacency, root_a, root_b, resistance, max_current, node["id"])
-		_add_adjacency(adjacency, root_b, root_a, resistance, max_current, node["id"])
+		if not _is_polarized_led(node):
+			_add_adjacency(adjacency, root_b, root_a, resistance, max_current, node["id"])
 
 	var damaged: Array = []
 	var node_currents: Dictionary = {}
@@ -239,6 +245,8 @@ func _dfs_paths(
 
 func _branch_pins(node: Dictionary) -> Array:
 	var pins: Array = node["pins"]
+	if _is_polarized_led(node):
+		return [LED_ANODE_PIN, LED_CATHODE_PIN]  # in the only direction current can flow
 	match node["type"]:
 		"resistor", "led", "buzzer", "potentiometer", "push_button", "photoresistor":
 			var usable: Array = []
@@ -254,6 +262,15 @@ func _branch_pins(node: Dictionary) -> Array:
 			return [power_pin, ground_pin] if power_pin != "" and ground_pin != "" else []
 		_:
 			return []
+
+
+## True for an LED whose pins are named anode/cathode; one without them (an older or
+## hand-written graph) has no known orientation and is treated as non-polar.
+func _is_polarized_led(node: Dictionary) -> bool:
+	if node["type"] != "led":
+		return false
+	var ids: Array = node["pins"].map(func(pin: Dictionary) -> String: return pin["id"])
+	return ids.has(LED_ANODE_PIN) and ids.has(LED_CATHODE_PIN)
 
 
 func _find_pin_id_by_role(pins: Array, role: String) -> String:
