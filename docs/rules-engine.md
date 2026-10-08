@@ -51,6 +51,23 @@ var result := RulesEngine.new().evaluate(circuit_doc)
    assumption). Net voltage is the source voltage minus the cumulative drop along the
    path; pin voltage is its net's voltage.
 
+## Component packs
+
+A node from a [component pack](component-packs.md) (`type` = `<pack id>.<name>`) carries
+an `electrical` object, and the engine treats it by that object alone:
+
+| `model` | Behaves like | Between |
+|---|---|---|
+| `resistive` | a resistor of `resistance_ohm`; damaged over `max_current_ma`, or over its `max_power_w` | `terminals` |
+| `rated_load` | `rated_voltage_v / rated_current_ma`, like a buzzer or a servo | `terminals`, or its `power`/`ground`-role pins |
+| `diode` | an LED: conducts only from `terminals[0]` (anode) to `terminals[1]` (cathode), `forward_voltage_v / rated_current_ma` (default `max_current_ma`) | `terminals` |
+| `switch` | a wire when `closed: true`, an open gap otherwise | `terminals` |
+| `source` | another ideal source: its `power`-role pins at `voltage_v`, its `ground`-role pins at 0V | — |
+| `none` | nothing (mechanical parts) | — |
+
+`max_current_ma` is the damage limit of every model; without it (and without a power
+rating) the part is never damaged. A source has no current limit (same as the Arduino).
+
 ## Known v1 limitations
 
 - **Digital/PWM pins aren't sources.** Only the `power`-role pin (e.g. "5V") sources

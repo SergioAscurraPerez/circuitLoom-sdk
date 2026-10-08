@@ -4,6 +4,10 @@ extends RefCounted
 ## Simplified circuit rules engine: consumes a schema v1 circuit graph and
 ## computes per-pin voltage and per-component current, flagging short
 ## circuits and overcurrent (damaged) components.
+##
+## Built-in types are recognized by `type`. A node from a component pack (ComponentPacks)
+## instead carries an `electrical` object that says how to treat it (resistive,
+## rated_load, diode, switch, source or none; see docs/component-packs.md).
 
 const MAX_PATH_HOPS := 12
 const MAX_PATHS_PER_SOURCE := 500
@@ -66,10 +70,15 @@ func evaluate(circuit_doc: Dictionary) -> Dictionary:
 		var to_key := _pin_key(edge["to"]["node_id"], edge["to"]["pin_id"])
 		uf.union(from_key, to_key)
 
-	# A normally-closed button behaves as an ideal wire; fold it into the net
-	# union step so it's indistinguishable from a hardwired connection.
+	# A normally-closed button (or a closed pack switch) behaves as an ideal wire; fold
+	# it into the net union step so it's indistinguishable from a hardwired connection.
 	for node in nodes:
-		if node["type"] == "push_button":
+		if _electrical_model(node) == "switch":
+			if _electrical(node).get("closed", false) == true:
+				var terminals := _branch_pins(node)
+				if terminals.size() == 2:
+					uf.union(_pin_key(node["id"], terminals[0]), _pin_key(node["id"], terminals[1]))
+		elif node["type"] == "push_button":
 			var specs: Dictionary = node["specs"]
 			if specs.get("normally_open", true) == false:
 				var branch := _branch_pins(node)
@@ -79,9 +88,13 @@ func evaluate(circuit_doc: Dictionary) -> Dictionary:
 	var power_nets: Dictionary = {}  # net root -> source voltage
 	var ground_nets: Dictionary = {}  # net root -> true
 	for node in nodes:
-		if node["type"] != "arduino_uno":
+		var voltage := 0.0
+		if _electrical_model(node) == "source":
+			voltage = float(_electrical(node)["voltage_v"])
+		elif node["type"] == "arduino_uno" and not _has_electrical(node):
+			voltage = float(node["specs"]["operating_voltage_v"])
+		else:
 			continue
-		var voltage: float = float(node["specs"]["operating_voltage_v"])
 		for pin in node["pins"]:
 			var root := uf.find(_pin_key(node["id"], pin["id"]))
 			if pin["role"] == "power":
@@ -105,7 +118,7 @@ func evaluate(circuit_doc: Dictionary) -> Dictionary:
 
 	var adjacency: Dictionary = {}  # net root -> Array[hop]
 	for node in nodes:
-		if node["type"] == "push_button":
+		if node["type"] == "push_button" or _electrical_model(node) == "switch":
 			continue  # switches only ever become a wire (above) or an open gap
 		var branch := _branch_pins(node)
 		if branch.size() != 2:
@@ -117,7 +130,7 @@ func evaluate(circuit_doc: Dictionary) -> Dictionary:
 		var resistance := _effective_resistance_ohm(node)
 		var max_current := _max_current_ma(node)
 		_add_adjacency(adjacency, root_a, root_b, resistance, max_current, node["id"])
-		if not _is_polarized_led(node):
+		if not _is_polarized(node):
 			_add_adjacency(adjacency, root_b, root_a, resistance, max_current, node["id"])
 
 	var damaged: Array = []
@@ -245,6 +258,8 @@ func _dfs_paths(
 
 func _branch_pins(node: Dictionary) -> Array:
 	var pins: Array = node["pins"]
+	if _has_electrical(node):
+		return _pack_branch_pins(node)
 	if _is_polarized_led(node):
 		return [LED_ANODE_PIN, LED_CATHODE_PIN]  # in the only direction current can flow
 	match node["type"]:
@@ -264,6 +279,37 @@ func _branch_pins(node: Dictionary) -> Array:
 			return []
 
 
+## The two pins a pack component conducts between, in the direction current flows for a
+## diode; empty for a source, a "none" or a component missing them.
+func _pack_branch_pins(node: Dictionary) -> Array:
+	var electrical := _electrical(node)
+	var model: String = electrical.get("model", "none")
+	if model in ["resistive", "diode", "switch", "rated_load"] and electrical.has("terminals"):
+		var terminals: Array = electrical["terminals"]
+		return terminals.duplicate() if terminals.size() == 2 else []
+	if model == "rated_load":
+		var power_pin := _find_pin_id_by_role(node["pins"], "power")
+		var ground_pin := _find_pin_id_by_role(node["pins"], "ground")
+		return [power_pin, ground_pin] if power_pin != "" and ground_pin != "" else []
+	return []
+
+
+func _is_polarized(node: Dictionary) -> bool:
+	return _is_polarized_led(node) or _electrical_model(node) == "diode"
+
+
+func _has_electrical(node: Dictionary) -> bool:
+	return node.get("electrical") is Dictionary
+
+
+func _electrical(node: Dictionary) -> Dictionary:
+	return node["electrical"] if _has_electrical(node) else {}
+
+
+func _electrical_model(node: Dictionary) -> String:
+	return str(_electrical(node).get("model", ""))
+
+
 ## True for an LED whose pins are named anode/cathode; one without them (an older or
 ## hand-written graph) has no known orientation and is treated as non-polar.
 func _is_polarized_led(node: Dictionary) -> bool:
@@ -281,6 +327,8 @@ func _find_pin_id_by_role(pins: Array, role: String) -> String:
 
 
 func _effective_resistance_ohm(node: Dictionary) -> float:
+	if _has_electrical(node):
+		return _pack_resistance_ohm(_electrical(node))
 	var specs: Dictionary = node["specs"]
 	var type: String = node["type"]
 
@@ -304,6 +352,22 @@ func _effective_resistance_ohm(node: Dictionary) -> float:
 	return 0.0
 
 
+func _pack_resistance_ohm(electrical: Dictionary) -> float:
+	match electrical.get("model"):
+		"resistive":
+			return float(electrical.get("resistance_ohm", 0.0))
+		"rated_load":
+			return _voltage_over_current(
+				electrical.get("rated_voltage_v", 0.0), electrical.get("rated_current_ma", 0.0)
+			)
+		"diode":
+			var current: Variant = electrical.get(
+				"rated_current_ma", electrical.get("max_current_ma", 0.0)
+			)
+			return _voltage_over_current(electrical.get("forward_voltage_v", 0.0), current)
+	return 0.0
+
+
 ## A servo holding still draws its idle current; only one marked `stalled` (forced
 ## against a load) draws its stall current. Graphs without `idle_current_ma` keep the
 ## stall current, as before.
@@ -321,6 +385,8 @@ func _voltage_over_current(voltage: Variant, current_ma: Variant) -> float:
 
 
 func _max_current_ma(node: Dictionary) -> float:
+	if _has_electrical(node):
+		return _pack_max_current_ma(_electrical(node))
 	var specs: Dictionary = node["specs"]
 	var type: String = node["type"]
 	if type == "resistor":
@@ -332,6 +398,17 @@ func _max_current_ma(node: Dictionary) -> float:
 		return float(specs.get("max_current_ma", INF))
 	if type == "servo_motor":
 		return float(specs.get("stall_current_ma", INF))
+	return INF
+
+
+## `max_current_ma` when the pack gives one; a resistive part without it is limited by
+## its power rating (`max_power_w`), like a resistor. Unrated = never damaged.
+func _pack_max_current_ma(electrical: Dictionary) -> float:
+	if electrical.has("max_current_ma"):
+		return float(electrical["max_current_ma"])
+	var resistance := float(electrical.get("resistance_ohm", 0.0))
+	if electrical.get("model") == "resistive" and electrical.has("max_power_w") and resistance > 0:
+		return sqrt(float(electrical["max_power_w"]) / resistance) * 1000.0
 	return INF
 
 

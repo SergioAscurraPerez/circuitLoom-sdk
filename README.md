@@ -107,7 +107,9 @@ components modeled for v1 — the same ones in a typical Arduino UNO starter kit
 specs verified against real datasheets and a real-scale glTF model each, with a primitive
 placeholder as fallback — see [`docs/components.md`](docs/components.md) and
 [`docs/models.md`](docs/models.md). A ready-to-use spark/smoke reference effect
-ships for short-circuit feedback — see [`docs/effects.md`](docs/effects.md).
+ships for short-circuit feedback — see [`docs/effects.md`](docs/effects.md). Games can add
+their own components from outside the addon with component packs — see
+[`docs/component-packs.md`](docs/component-packs.md).
 
 ## Contributing
 

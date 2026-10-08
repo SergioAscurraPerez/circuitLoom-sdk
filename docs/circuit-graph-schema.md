@@ -20,6 +20,14 @@ A breaking change to the shape of nodes/edges/specs ships as `schema/v2/...` rat
 mutating `v1` in place, so existing serialized circuits keep validating against the
 schema version they declare.
 
+## Component pack types
+
+Besides the built-in types, `node.type` can be `<pack id>.<name>`: a component from a
+[component pack](component-packs.md). Such a node must carry an `electrical` object
+(`$defs.electrical`), which tells the rules engine how to treat it; built-in types can't
+have one. Its `specs` are free-form. Documents without pack types are unchanged, so this
+stays `v1`.
+
 ## Shape
 
 ```

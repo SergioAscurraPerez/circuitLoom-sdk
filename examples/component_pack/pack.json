@@ -1,0 +1,42 @@
+{
+  "schema_version": "v1",
+  "id": "example",
+  "name": "Example component pack",
+  "components": [
+    {
+      "name": "battery_holder_4aa",
+      "display_name": "4xAA Battery Holder",
+      "part_reference": "Generic 2x2 holder for four AA cells in series, with leads",
+      "pins": [
+        { "id": "pos", "role": "power" },
+        { "id": "neg", "role": "ground" }
+      ],
+      "electrical": { "model": "source", "voltage_v": 6 },
+      "specs": { "cells": 4, "cell_voltage_v": 1.5 },
+      "extent_m": [0.05, 0.07],
+      "datasheet_source": "https://www.pololu.com/product/1153",
+      "dimensions_source": "https://www.taydaelectronics.com/aa-battery-holder-4.html",
+      "notes": "Body 62.65 x 57.40 x 14.80 mm, 152.4 mm AWG26 leads (reseller listing; 58 x 63 x 16 mm in the second source). 4 x 1.5 V alkaline cells = 6 V nominal; evaluated as an ideal source."
+    },
+    {
+      "name": "rectifier_diode",
+      "display_name": "1A Rectifier Diode",
+      "part_reference": "Generic 1N4007 silicon rectifier diode, DO-41 axial package",
+      "pins": [
+        { "id": "anode", "role": "passive" },
+        { "id": "cathode", "role": "passive" }
+      ],
+      "electrical": {
+        "model": "diode",
+        "terminals": ["anode", "cathode"],
+        "forward_voltage_v": 1.1,
+        "max_current_ma": 1000
+      },
+      "specs": { "reverse_voltage_v": 1000 },
+      "extent_m": [0.004, 0.06],
+      "datasheet_source": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2201280500_YFW-1N4007_C1884551.pdf",
+      "dimensions_source": "https://wmsc.lcsc.com/wmsc/upload/file/pdf/v2/lcsc/2201280500_YFW-1N4007_C1884551.pdf",
+      "notes": "DO-41 outline: body 4.10-5.20 mm long, 2.00-2.70 mm diameter, leads 0.70-0.90 mm diameter and at least 25.40 mm long each; band marks the cathode. VF 1.1 V max at 1.0 A, IF(AV) 1.0 A."
+    }
+  ]
+}

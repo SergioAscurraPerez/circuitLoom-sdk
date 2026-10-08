@@ -44,6 +44,12 @@ A model must:
 - Use PBR materials named `MAT_<part>`, and embed any texture in the `.glb`.
 - Avoid node names ending in Godot's import suffixes (`-col`, `-noimp`, `-convcol`, `-occ`,
   `-navmesh`, `-vehicle`, `-wheel`, `-rigid`, `-loop`, `-alpha`, `-vcol`).
+- Follow the part's real measurements, taken from a mechanical drawing or datasheet
+  outline (package dimensions, pin pitch, hole positions), not from eyeballing photos.
+  Cite where they come from in the catalog entry's `notes` (or `dimensions_source` in a
+  [component pack](component-packs.md)).
+- Carry **no brands**: no logos, manufacturer names or trademarked text on meshes or
+  textures. Generic silkscreen (pin labels, `+`/`-`, polarity marks) is fine.
 
 ## Exporting from Blender
 
