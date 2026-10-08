@@ -33,6 +33,16 @@
     },
 
     "componentType": {
+      "anyOf": [{ "$ref": "#/$defs/builtinComponentType" }, { "$ref": "#/$defs/packComponentType" }]
+    },
+
+    "packComponentType": {
+      "description": "A component from a registered component pack: '<pack id>.<name>' (see docs/component-packs.md). Its node must carry an `electrical` object.",
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9_]*\\.[a-z][a-z0-9_]*$"
+    },
+
+    "builtinComponentType": {
       "enum": [
         "arduino_uno",
         "led",
@@ -86,9 +96,15 @@
           "minItems": 1,
           "items": { "$ref": "#/$defs/pin" }
         },
-        "specs": { "type": "object" }
+        "specs": { "type": "object" },
+        "electrical": { "$ref": "#/$defs/electrical" }
       },
       "allOf": [
+        {
+          "if": { "properties": { "type": { "$ref": "#/$defs/packComponentType" } } },
+          "then": { "required": ["electrical"] },
+          "else": { "not": { "required": ["electrical"] } }
+        },
         {
           "if": { "properties": { "type": { "const": "arduino_uno" } } },
           "then": { "properties": { "specs": { "$ref": "#/$defs/specs/arduino_uno" } } }
@@ -128,6 +144,53 @@
         {
           "if": { "properties": { "type": { "const": "photoresistor" } } },
           "then": { "properties": { "specs": { "$ref": "#/$defs/specs/photoresistor" } } }
+        }
+      ]
+    },
+
+    "electrical": {
+      "description": "How the rules engine treats a component-pack component (docs/component-packs.md).",
+      "type": "object",
+      "required": ["model"],
+      "additionalProperties": false,
+      "properties": {
+        "model": { "enum": ["resistive", "rated_load", "diode", "switch", "source", "none"] },
+        "terminals": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "resistance_ohm": { "type": "number", "exclusiveMinimum": 0 },
+        "max_power_w": { "type": "number", "exclusiveMinimum": 0 },
+        "rated_voltage_v": { "type": "number", "exclusiveMinimum": 0 },
+        "rated_current_ma": { "type": "number", "exclusiveMinimum": 0 },
+        "forward_voltage_v": { "type": "number", "exclusiveMinimum": 0 },
+        "max_current_ma": { "type": "number", "exclusiveMinimum": 0 },
+        "closed": { "type": "boolean" },
+        "voltage_v": { "type": "number", "exclusiveMinimum": 0 }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "model": { "const": "resistive" } } },
+          "then": { "required": ["terminals", "resistance_ohm"] }
+        },
+        {
+          "if": { "properties": { "model": { "const": "rated_load" } } },
+          "then": { "required": ["rated_voltage_v", "rated_current_ma"] }
+        },
+        {
+          "if": { "properties": { "model": { "const": "diode" } } },
+          "then": { "required": ["terminals", "forward_voltage_v", "max_current_ma"] }
+        },
+        {
+          "if": { "properties": { "model": { "const": "switch" } } },
+          "then": { "required": ["terminals"] }
+        },
+        {
+          "if": { "properties": { "model": { "const": "source" } } },
+          "then": { "required": ["voltage_v"] }
         }
       ]
     },

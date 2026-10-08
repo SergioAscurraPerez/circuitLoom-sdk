@@ -7,6 +7,22 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Added
+
+- Component packs: `ComponentPacks.register(dir)` adds components from outside the addon
+  (`pack.json` + optional `models/<name>.glb`) with the type `<pack id>.<name>`.
+  `ComponentCatalog` builds them (their model, or a placeholder with their pins) and
+  `ModelLoader` checks them against the pack's contract
+  ([docs](docs/component-packs.md)).
+- `electrical` on circuit graph nodes of pack types (schema v1, optional for existing
+  documents): `RulesEngine` evaluates `resistive`, `rated_load`, `diode`, `switch`,
+  `source` and `none` parts without knowing their type, and a `source` powers a circuit
+  without an Arduino ([docs](docs/rules-engine.md#component-packs)).
+- `schema/v1/component-pack.schema.json`, `scripts/validate_component_pack.py` (run in
+  CI) and an example pack in `examples/component_pack/`.
+- The model guide asks for measurements from a mechanical drawing or datasheet and no
+  brands on models ([docs](docs/models.md#the-contract)).
+
 ## [0.3.0] - 2026-10-07
 
 ### Added

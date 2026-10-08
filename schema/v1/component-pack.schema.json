@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/SergioAscurraPerez/circuitLoom-sdk/main/schema/v1/component-pack.schema.json",
+  "title": "CircuitLoom Component Pack",
+  "description": "A catalog of extra components registered at runtime with ComponentPacks.register(dir): <dir>/pack.json plus optional glTF models in <dir>/models/<name>.glb. See docs/component-packs.md.",
+  "type": "object",
+  "required": ["schema_version", "id", "components"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "const": "v1" },
+    "id": { "$ref": "#/$defs/name" },
+    "name": { "type": "string" },
+    "license": { "type": "string" },
+    "components": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/component" }
+    }
+  },
+  "$defs": {
+    "name": { "type": "string", "pattern": "^[a-z][a-z0-9_]*$" },
+
+    "component": {
+      "type": "object",
+      "required": [
+        "name",
+        "display_name",
+        "part_reference",
+        "pins",
+        "electrical",
+        "extent_m",
+        "dimensions_source"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "$ref": "#/$defs/name" },
+        "display_name": { "type": "string", "minLength": 1 },
+        "part_reference": {
+          "description": "The real part it models, described generically: what it is compatible with, never a logo or brand on the model itself.",
+          "type": "string",
+          "minLength": 1
+        },
+        "pins": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "circuit-graph.schema.json#/$defs/pin" }
+        },
+        "electrical": { "$ref": "circuit-graph.schema.json#/$defs/electrical" },
+        "specs": { "type": "object" },
+        "parts": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^(STATE|MOVE)_" }
+        },
+        "extent_m": {
+          "description": "Sanity range in meters for the model's longest dimension.",
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": { "type": "number", "exclusiveMinimum": 0 }
+        },
+        "datasheet_source": { "type": "string" },
+        "dimensions_source": {
+          "description": "Where the model's real measurements come from (mechanical drawing, datasheet outline).",
+          "type": "string",
+          "minLength": 1
+        },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}

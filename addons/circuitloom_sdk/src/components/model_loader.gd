@@ -5,6 +5,8 @@ extends RefCounted
 ## against the model contract (data/model_contract.json). Returns null when the model
 ## is missing or breaks the contract, so ComponentCatalog can fall back to the
 ## primitive placeholder instead of leaving a broken or unanchored component in the scene.
+## A pack component's model is <pack>/models/<name>.glb and its contract comes from the
+## pack (ComponentPacks).
 
 const MODELS_DIR := "res://addons/circuitloom_sdk/models/"
 const CONTRACT_PATH := "res://addons/circuitloom_sdk/data/model_contract.json"
@@ -12,6 +14,8 @@ const PIN_PREFIX := "PIN_"
 
 
 static func model_path(component_type: String) -> String:
+	if ComponentPacks.has(component_type):
+		return ComponentPacks.model_path(component_type)
 	return "%s%s.glb" % [MODELS_DIR, component_type]
 
 
@@ -54,6 +58,8 @@ static func load_model(component_type: String) -> Node3D:
 static func validate(root: Node, component_type: String) -> PackedStringArray:
 	var problems := PackedStringArray()
 	var entry: Variant = contract().get(component_type)
+	if ComponentPacks.has(component_type):
+		entry = ComponentPacks.contract_entry(component_type)
 	if entry == null:
 		problems.append("no contract for type '%s'" % component_type)
 		return problems
