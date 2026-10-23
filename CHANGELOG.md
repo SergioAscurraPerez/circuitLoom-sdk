@@ -7,6 +7,14 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-10-23
+
+### Changed
+
+- The Arduino UNO's textures are imported at 1024 px instead of 2048 px (5.6 MB less in
+  Web builds; pin labels stay readable). A test keeps every model texture at 1024 px or
+  less, and the model guide says so ([docs](docs/models.md#the-contract)).
+
 ## [0.4.0] - 2026-10-08
 
 ### Added
@@ -117,7 +125,8 @@ First public release.
 - Spark effect was invisible when spawned into a running scene: it now uses
   `restart()`, tints from the particle color, and uses a visible particle size.
 
-[Unreleased]: https://github.com/SergioAscurraPerez/circuitLoom-sdk/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/SergioAscurraPerez/circuitLoom-sdk/compare/v0.4.1...HEAD
+[0.4.1]: https://github.com/SergioAscurraPerez/circuitLoom-sdk/releases/tag/v0.4.1
 [0.4.0]: https://github.com/SergioAscurraPerez/circuitLoom-sdk/releases/tag/v0.4.0
 [0.3.0]: https://github.com/SergioAscurraPerez/circuitLoom-sdk/releases/tag/v0.3.0
 [0.2.0]: https://github.com/SergioAscurraPerez/circuitLoom-sdk/releases/tag/v0.2.0

@@ -42,6 +42,8 @@ A model must:
   The contract also holds a sanity range (`extent_m`) for the model's longest dimension to
   catch unit mistakes, such as exporting millimeters as meters.
 - Use PBR materials named `MAT_<part>`, and embed any texture in the `.glb`.
+  Textures are imported at 1024 px or less (`process/size_limit=1024` in their
+  `.import`, a test checks it): Web builds download all of them before the first scene.
 - Avoid node names ending in Godot's import suffixes (`-col`, `-noimp`, `-convcol`, `-occ`,
   `-navmesh`, `-vehicle`, `-wheel`, `-rigid`, `-loop`, `-alpha`, `-vcol`).
 - Follow the part's real measurements, taken from a mechanical drawing or datasheet
